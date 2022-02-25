@@ -1,5 +1,9 @@
 .Home-logo {
-	height: 35vmin;
+	height: 42vmin;
 	pointer-events: none;
+	padding-top: 3em;
+}
+
+.Home-buttons-section {
 	padding-top: 3em;
 }
