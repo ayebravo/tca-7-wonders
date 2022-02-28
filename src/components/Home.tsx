@@ -22,9 +22,6 @@ const Home = () => {
                 <Button variant="contained" startIcon={<AnalyticsOutlinedIcon />} size="large" color="success" onClick={() => nav123("/fun-facts")}>
                     Fun Facts
                 </Button>
-                <Button variant="contained" startIcon={<TimelineOutlinedIcon />} size="large" color="success" onClick={() => nav123("/games-history")}>
-                    Games History
-                </Button>
             </Stack>
             <div id="gamesHistory">
                 <GamesHistory />
