@@ -9,23 +9,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const GamesHistory = () => {
+const GamesHistory = (props: { games: any; }) => {
+    const games = props.games.data;
 
-    function createData(
-        name: string,
-        opponents: string[],
-        gameResult: string
-    ) {
+    const createData = (name: string, opponents: string[], gameResult: string) => {
         return { name, opponents, gameResult };
-    }
+    };
 
-    const rows = [
-        createData('1/02/22', ["Me", "Sam"], "W"),
-        createData('1/03/22', ["Me", "Sam", "Silvia"], "W"),
-        createData('1/28/22', ["Me", "Fermin" , "Sam"], "L"),
-        createData('2/02/22', ["Me", "Sam", "Santi", "Vic"], "L"),
-        createData('2/13/22', ["Me", "Ellen", "Sam"], "W"),
-    ];
+    const rows = games.map((game: any) => createData(game.date, game.opponents, game.gameResult));
 
     return (
         <div className='gamesHistoryContainer'>
@@ -34,30 +25,30 @@ const GamesHistory = () => {
             </Typography>
 
             <TableContainer component={Paper}>
-            <Table sx={{ width: "100%", padding: "0.5em 1em" }} aria-label="simple table">
-                <TableHead>
-                <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell align="left">Opponents</TableCell>
-                    <TableCell align="center">W/L</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map((row) => (
-                    <TableRow
-                    key={row.name}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                    <TableCell component="th" scope="row">
-                        {row.name}
-                    </TableCell>
-                    <TableCell align="left">{row.opponents.join(", ")}</TableCell>
-                    <TableCell align="center">{row.gameResult}</TableCell>
+                <Table sx={{ width: "100%", padding: "0.5em 1em" }} aria-label="simple table">
+                    <TableHead>
+                    <TableRow>
+                        <TableCell>Date</TableCell>
+                        <TableCell align="left">Opponents</TableCell>
+                        <TableCell align="center">W/L</TableCell>
                     </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                    {rows.map((row: any) => (
+                        <TableRow
+                        key={row.name}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                        <TableCell component="th" scope="row">
+                            {row.name}
+                        </TableCell>
+                        <TableCell align="left">{row.opponents.join(", ")}</TableCell>
+                        <TableCell align="center">{row.gameResult}</TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
         </div>
     );
