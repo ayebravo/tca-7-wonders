@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
-import '../styles/GamesHistory.css';
-import React from 'react';
+import '../styles/Games-history.css';
+// import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,14 +9,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const GamesHistory = (props: { games: any; }) => {
-    const games = props.games.data;
+interface GamesHistoryProps {
+    gamesData: any[];
+}
 
-    const createData = (name: string, opponents: string[], gameResult: string) => {
-        return { name, opponents, gameResult };
+const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
+
+    const createData = (date: string, opponents: string[], gameResult: string) => {
+        return { date, opponents, gameResult };
     };
 
-    const rows = games.map((game: any) => createData(game.date, game.opponents, game.gameResult));
+    const rows = gamesData.map((game: any) => createData(game.date, game.opponents, game.gameResult));
 
     return (
         <div className='gamesHistoryContainer'>
@@ -36,11 +39,11 @@ const GamesHistory = (props: { games: any; }) => {
                     <TableBody>
                     {rows.map((row: any) => (
                         <TableRow
-                        key={row.name}
+                        key={row.date}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                         <TableCell component="th" scope="row">
-                            {row.name}
+                            {row.date}
                         </TableCell>
                         <TableCell align="left">{row.opponents.join(", ")}</TableCell>
                         <TableCell align="center">{row.gameResult}</TableCell>
