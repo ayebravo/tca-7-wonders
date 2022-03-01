@@ -23,7 +23,7 @@ const Home = () => {
                     Fun Facts
                 </Button>
             </Stack>
-            <div id="gamesHistory">
+            <div style={{ width: "80%"}}>
                 <GamesHistory />
             </div>
         </>
