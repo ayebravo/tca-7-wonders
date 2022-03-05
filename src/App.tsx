@@ -3,7 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import Home from "./components/Home";
 import SetupGame from "./components/Setup-game";
 import FunFacts from "./components/Fun-facts";
-import NewGame from "./components/New-game-stage1";
+import NewGame from "./components/Game-stage1";
+import GameStageTwo from "./components/Game-stage2";
+import GameStageThree from "./components/Game-stage3";
 import './App.css';
 
 
@@ -13,9 +15,9 @@ interface player {
 }
 
 export interface gameResult {
-  // To-do: Add function to get formattedDate from start and end properties
-  // To-do: Add function to calculate duration
-  // To-do: See how to update a game's formattedDate and duration properties
+  // TODO: Add function to get formattedDate from game's start and end properties
+  // TODO: Add function to calculate duration
+  // TODO: See how to update a game's formattedDate and duration properties
   formattedDate: string,
   winner: string,     
   players: player[]
@@ -73,7 +75,9 @@ const App: React.FC = () => {
         <Route path="/" element={<Home gameResults={ results } />} />
         <Route path="setup-game" element={<SetupGame />} />
         <Route path="fun-facts" element={<FunFacts />} />
-        <Route path="new-game-stage1" element={<NewGame addGameResult={ addGameResult } />} />
+        <Route path="game-stage1" element={<NewGame />} />
+        <Route path="game-stage2" element={<GameStageTwo />} />
+        <Route path="game-stage3" element={<GameStageThree addGameResult={ addGameResult } />} />
       </Routes>
     </div>
   );

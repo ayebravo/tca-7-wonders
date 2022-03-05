@@ -25,6 +25,7 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
 
     const rows = gamesData.map((game: any) => createData(game.formattedDate, game.players, getGameResult(game)));
 
+    // TODO: Sort rows so games are displayed chronologically with the latest game at the top
     return (
         <div className='gamesHistoryContainer'>
             <Typography className="Home-Heading" variant="h4" component="div" gutterBottom>
