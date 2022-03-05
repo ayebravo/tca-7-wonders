@@ -4,15 +4,15 @@ import CasinoOutlinedIcon from '@mui/icons-material/CasinoOutlined';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router-dom';
+import { gameResult } from '../App';
 import GamesHistory from "./Games-history";
 import '../styles/Home.css';
-import { game } from '../App';
 
 interface HomeProps {
-    games: game[];
+    gameResults: gameResult[];
 }
 
-const Home: React.FC<HomeProps> = ({ games }) => {
+const Home: React.FC<HomeProps> = ({ gameResults }) => {
     const nav = useNavigate();
 
     return (
@@ -27,7 +27,7 @@ const Home: React.FC<HomeProps> = ({ games }) => {
                 </Button>
             </Stack>
             <div style={{ width: "80%"}}>
-                <GamesHistory gamesData={games} />
+                <GamesHistory gamesData={gameResults} />
             </div>
         </>
     );

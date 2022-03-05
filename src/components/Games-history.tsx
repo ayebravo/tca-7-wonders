@@ -1,6 +1,4 @@
 import Typography from '@mui/material/Typography';
-import '../styles/Games-history.css';
-// import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import '../styles/Games-history.css';
 
 interface GamesHistoryProps {
     gamesData: any[];
@@ -15,11 +14,16 @@ interface GamesHistoryProps {
 
 const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
 
-    const createData = (date: string, opponents: string[], gameResult: string) => {
-        return { date, opponents, gameResult };
+    const getGameResult = (game: any) => {
+        return game.winner === "Me" ? "W" : "L"; 
+    }
+
+    const createData = (formattedDate: string, players: any[], gameResult: string) => {
+        const playersFormattedList = players.map(player => player.name).join(", ");
+        return { formattedDate, playersFormattedList, gameResult };
     };
 
-    const rows = gamesData.map((game: any) => createData(game.date, game.opponents, game.gameResult));
+    const rows = gamesData.map((game: any) => createData(game.formattedDate, game.players, getGameResult(game)));
 
     return (
         <div className='gamesHistoryContainer'>
@@ -32,20 +36,20 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
                     <TableHead>
                     <TableRow>
                         <TableCell>Date</TableCell>
-                        <TableCell align="left">Opponents</TableCell>
+                        <TableCell align="left">Players</TableCell>
                         <TableCell align="center">W/L</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {rows.map((row: any) => (
                         <TableRow
-                        key={row.date}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            key={row.formattedDate}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                         <TableCell component="th" scope="row">
-                            {row.date}
+                            {row.formattedDate}
                         </TableCell>
-                        <TableCell align="left">{row.opponents.join(", ")}</TableCell>
+                        <TableCell align="left">{row.playersFormattedList}</TableCell>
                         <TableCell align="center">{row.gameResult}</TableCell>
                         </TableRow>
                     ))}

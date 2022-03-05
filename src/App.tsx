@@ -1,36 +1,79 @@
-// import React from 'react';
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from "./components/Home";
 import SetupGame from "./components/Setup-game";
 import FunFacts from "./components/Fun-facts";
-import NewGame from "./components/New-game";
+import NewGame from "./components/New-game-stage1";
 import './App.css';
 
-export interface game {
-  date: string,
-  opponents: string[],
-  gameResult: string
+
+interface player {
+  name: string;
+  order: number;
 }
 
-// Next to-do: add other app data and implement useState so child components get updated state of all game results
-const gameResults: game[] = [
-  { date: '1/02/22', opponents: ["Me", "Sam"], gameResult: "W"},
-  { date: '1/03/22', opponents: ["Me", "Sam", "Silvia"], gameResult: "W"},
-  { date: '1/28/22', opponents: ["Me", "Fermin" , "Sam"], gameResult: "L"},
-  { date: '2/02/22', opponents: ["Me", "Sam", "Santi", "Vic"], gameResult:  "L"},
-  { date: '2/13/22', opponents: ["Me", "Ellen", "Sam"], gameResult: "W"},
-  { date: '2/28/22', opponents: ["Me", "Vicky", "Flor"], gameResult: "L"},
+export interface gameResult {
+  // To-do: Add function to get formattedDate from start and end properties
+  // To-do: Add function to calculate duration
+  // To-do: See how to update a game's formattedDate and duration properties
+  formattedDate: string,
+  winner: string,     
+  players: player[]
+  // start: string,
+  // end: string,
+  // formattedDate: string,
+  // duration: string
+}
+
+const gameOne: gameResult = {
+  formattedDate: "1/02/22", 
+  winner: "Me",
+  players: [{name: "Me", order: 1}, {name: "Sam", order: 2}]
+}
+
+const gameTwo: gameResult = {
+  formattedDate: "1/16/22",
+  winner: "Silvia",
+  players: [{name: "Me", order: 1}, {name: "Silvia", order: 2}, {name: "Fermin", order: 3}]
+};
+
+const gameThree: gameResult = {
+  formattedDate: "2/02/22",
+  winner: "Me",
+  players: [{name: "Me", order: 1}, {name: "Silvia", order: 2}, {name: "Fermin", order: 3}, {name: "Sam", order: 4}]
+};
+
+const gameFour: gameResult = {
+  formattedDate: "2/25/22",
+  winner: "Sam",
+  players: [{name: "Me", order: 1}, {name: "Sam", order: 2}]
+}
+
+const gameResults: gameResult[] = [
+  gameOne,
+  gameTwo,
+  gameThree,
+  gameFour
 ];
 
-const App = () => {
+const App: React.FC = () => {
+
+  const [results, setResults] = useState(gameResults);
+
+  const addGameResult = (singleGameResult: gameResult) => {
+    setResults([
+      ...gameResults 
+      , singleGameResult
+    ]);
+  };
 
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home games={ gameResults } />} />
+        <Route path="/" element={<Home gameResults={ results } />} />
         <Route path="setup-game" element={<SetupGame />} />
         <Route path="fun-facts" element={<FunFacts />} />
-        <Route path="new-game" element={<NewGame />} />
+        <Route path="new-game-stage1" element={<NewGame addGameResult={ addGameResult } />} />
       </Routes>
     </div>
   );

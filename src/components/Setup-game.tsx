@@ -10,7 +10,7 @@ const SetupGame = () => {
         <>
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
            <h1>New game set up page</h1>
-           <Button variant="contained" size="large" color="success" onClick={() => nav("/new-game")}>Play Game</Button>
+           <Button variant="contained" size="large" color="success" onClick={() => nav("/new-game-stage1")}>Play Game</Button>
         </>
     );
 };
