@@ -7,11 +7,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
 
-interface PlayersListProps {
-    playersData: any[]
-}
-
-const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData }) => {
+const CheckboxListSecondary = () => {
     const [checked, setChecked] = React.useState([1]);
   
     const handleToggle = (value: number) => () => {
@@ -28,9 +24,9 @@ const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData }) => {
     };
   
     return (
-      <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }}>
-        {playersData.map((value) => {
-          const labelId = `checkbox-list-secondary-label-${value.name}`;
+      <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent'}}>
+        {[{name: "Olimpia", order: 1}].map((value) => {
+          const labelId = `checkbox-list-secondary-label-${value}`;
           return (
             <ListItem
               key={value.order}
