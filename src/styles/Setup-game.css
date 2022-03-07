@@ -1,0 +1,10 @@
+.Small-logo {
+	height: 25vmin;
+	cursor: pointer;
+	padding-top: 1em;
+}
+
+.selectPlayersContainer {
+	display: flex;
+	padding-bottom: 3em;
+}

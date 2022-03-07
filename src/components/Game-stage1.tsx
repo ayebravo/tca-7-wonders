@@ -1,7 +1,7 @@
 import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import '../styles/New-game.css';
+import '../styles/GameStage.css';
 
 const NewGame = () => {
     const nav = useNavigate();

@@ -9,9 +9,24 @@ import GameStageThree from "./components/Game-stage3";
 import './App.css';
 
 
-interface player {
+export interface player {
   name: string;
   order: number;
+}
+
+const playerOne: player = {
+  name: "Me",
+  order: 1
+}
+
+const playerTwo: player = {
+  name: "Sam",
+  order: 2
+}
+
+const playerThree: player = {
+  name: "Santi",
+  order: 3
 }
 
 export interface gameResult {
@@ -58,6 +73,12 @@ const gameResults: gameResult[] = [
   gameFour
 ];
 
+const players: player[] = [
+  playerOne,
+  playerTwo,
+  playerThree
+]
+
 const App: React.FC = () => {
 
   const [results, setResults] = useState(gameResults);
@@ -69,11 +90,13 @@ const App: React.FC = () => {
     ]);
   };
 
+  const [playersList, setPlayersList] = useState(players);
+
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Home gameResults={ results } />} />
-        <Route path="setup-game" element={<SetupGame />} />
+        <Route path="setup-game" element={<SetupGame players={ playersList } />} />
         <Route path="fun-facts" element={<FunFacts />} />
         <Route path="game-stage1" element={<NewGame />} />
         <Route path="game-stage2" element={<GameStageTwo />} />

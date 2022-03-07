@@ -28,6 +28,7 @@ const GameStageThree: React.FC<NewGameProps> = ({addGameResult}) => {
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
            <h1>Game Stage Three page</h1>
            <Button variant="contained" size="large" color="success" onClick={ endGame }>Done</Button>
+           {/* When play game button is clicked, I want to get the end time timestamp for the current game */}
         </>
     );
 };
