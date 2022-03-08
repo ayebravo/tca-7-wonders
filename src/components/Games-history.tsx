@@ -23,9 +23,20 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
         return { formattedDate, playersFormattedList, gameResult };
     };
 
-    const rows = gamesData.map((game: any) => createData(game.formattedDate, game.players, getGameResult(game)));
+    const rows = gamesData.map((game:any) => createData(game.formattedDate, game.players, getGameResult(game)));
 
-    // TODO: Sort rows so games are displayed chronologically with the latest game at the top
+    const sortTableRows = ( rowA:any, rowB:any ) => {
+        if ( rowA.formattedDate > rowB.formattedDate ){
+          return -1;
+        }
+        if ( rowA.formattedDate < rowB.formattedDate ){
+          return 1;
+        }
+        return 0;
+    }
+      
+    rows.sort( sortTableRows );
+
     return (
         <div className='gamesHistoryContainer'>
             <Typography className="Home-Heading" variant="h4" component="div" gutterBottom>
