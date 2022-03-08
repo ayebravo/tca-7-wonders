@@ -14,7 +14,10 @@ const GameStageThree: React.FC<NewGameProps> = ({addGameResult}) => {
     const endGame = () => {
         // Add the new game result to the app data
         addGameResult({
-            formattedDate: "3/01/22",
+            // TODO: formattedDate will likely be replaced by the properties:
+            // start: currentGame.start,
+            // end: new Date().toISOString()
+            formattedDate: "2022-12-21", 
             winner: "Me",
             players: [{name: "Me", order: 1}, {name: "Sam", order: 2}, {name: "Mike", order: 3}]
         });

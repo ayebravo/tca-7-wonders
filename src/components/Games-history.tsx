@@ -7,35 +7,25 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import '../styles/Games-history.css';
+import { gameResult, player } from '../App';
 
 interface GamesHistoryProps {
-    gamesData: any[];
+    gamesData: gameResult[];
 }
 
 const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
 
-    const getGameResult = (game: any) => {
+    const getGameResult = (game: gameResult) => {
         return game.winner === "Me" ? "W" : "L"; 
     }
 
-    const createData = (formattedDate: string, players: any[], gameResult: string) => {
+    const createData = (formattedDate: string, players: player[], gameResult: string) => {
         const playersFormattedList = players.map(player => player.name).join(", ");
         return { formattedDate, playersFormattedList, gameResult };
     };
 
-    const rows = gamesData.map((game:any) => createData(game.formattedDate, game.players, getGameResult(game)));
-
-    const sortTableRows = ( rowA:any, rowB:any ) => {
-        if ( rowA.formattedDate > rowB.formattedDate ){
-          return -1;
-        }
-        if ( rowA.formattedDate < rowB.formattedDate ){
-          return 1;
-        }
-        return 0;
-    }
-      
-    rows.sort( sortTableRows );
+    const rows = gamesData.map((game:gameResult) => createData(game.formattedDate, game.players, getGameResult(game)));
+    const sortedRows = [...rows].sort((a, b) => a.formattedDate.localeCompare(b.formattedDate)).reverse();
 
     return (
         <div className='gamesHistoryContainer'>
@@ -53,13 +43,14 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {rows.map((row: any) => (
+                    {sortedRows.map((row: any) => (
                         <TableRow
                             key={row.formattedDate}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                         <TableCell component="th" scope="row">
-                            {row.formattedDate}
+                            {/* {row.formattedDate} */}
+                            {new Date(row.formattedDate).toLocaleDateString()}
                         </TableCell>
                         <TableCell align="left">{row.playersFormattedList}</TableCell>
                         <TableCell align="center">{row.gameResult}</TableCell>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
@@ -10,11 +11,38 @@ import TextField from '@mui/material/TextField';
 import '../styles/Setup-game.css';
 
 interface SetupGameProps {
-    players: player[]
+    players: player[],
+    addPlayer: (p: player) => void;
 }
 
-const SetupGame: React.FC<SetupGameProps> = ({ players }) => {
+const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
+    const [newPlayerInput, setNewPlayerInput] = useState("");
     const nav = useNavigate();
+
+    const displayNameExistsErrorMessage = () => {
+        alert("The entered name already exists");
+    }
+
+    const addPlayerToList = () => {
+        const newPlayerInputFormatted = (newPlayerInput.charAt(0).toUpperCase() + newPlayerInput.slice(1)).trim();
+        // Check if the input exist as a name in the players object
+        const isNameInTheList = players.map(player => player.name).includes(newPlayerInputFormatted);
+
+        if (isNameInTheList === false) {
+            addPlayer({
+                name: newPlayerInputFormatted,
+                order: players.length + 1
+            });
+        } else {
+            displayNameExistsErrorMessage()
+        }
+        
+        setNewPlayerInput(""); // Reset new player's input to reset the text field
+    }
+
+    const handleInputChange = (event: any) => {
+        setNewPlayerInput(event.target.value);
+    }
     
     return (
         <div className='setupGameContainer'>
@@ -28,12 +56,18 @@ const SetupGame: React.FC<SetupGameProps> = ({ players }) => {
                 sx={{
                     '& .MuiTextField-root': { m: 1, width: '18ch' },
                 }}
-                noValidate
                 autoComplete="off"
+                noValidate
                 >
                 <div className='addPlayerContainer'>
-                    <TextField label="Player's name" id="outlined-size-normal" size='small' />
-                    <Button variant="outlined" size="medium" color="success">
+                    <TextField 
+                        label="Player's name" 
+                        id="outlined-size-normal" 
+                        size='small' 
+                        value={newPlayerInput}
+                        onChange={handleInputChange}
+                    />
+                    <Button variant="outlined" size="medium" color="success" onClick={ addPlayerToList }>
                         Add player
                     </Button>
                 </div>

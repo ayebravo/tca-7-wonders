@@ -43,25 +43,25 @@ export interface gameResult {
 }
 
 const gameOne: gameResult = {
-  formattedDate: "1/02/22", 
+  formattedDate: "2022-01-03", 
   winner: "Me",
   players: [{name: "Me", order: 1}, {name: "Sam", order: 2}]
 }
 
 const gameTwo: gameResult = {
-  formattedDate: "1/16/22",
+  formattedDate: "2022-01-16",
   winner: "Silvia",
   players: [{name: "Me", order: 1}, {name: "Silvia", order: 2}, {name: "Fermin", order: 3}]
 };
 
 const gameThree: gameResult = {
-  formattedDate: "2/02/22",
+  formattedDate: "2022-02-16",
   winner: "Me",
   players: [{name: "Me", order: 1}, {name: "Silvia", order: 2}, {name: "Fermin", order: 3}, {name: "Sam", order: 4}]
 };
 
 const gameFour: gameResult = {
-  formattedDate: "2/25/22",
+  formattedDate: "2022-02-25",
   winner: "Sam",
   players: [{name: "Me", order: 1}, {name: "Sam", order: 2}]
 }
@@ -82,6 +82,7 @@ const players: player[] = [
 const App: React.FC = () => {
 
   const [results, setResults] = useState(gameResults);
+  const [playersList, setPlayersList] = useState(players);
 
   const addGameResult = (singleGameResult: gameResult) => {
     setResults([
@@ -90,13 +91,18 @@ const App: React.FC = () => {
     ]);
   };
 
-  const [playersList, setPlayersList] = useState(players);
+  const addPlayer = (newPlayer: player) => {
+    setPlayersList([
+      ...playersList,
+      newPlayer
+    ])
+  };
 
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Home gameResults={ results } />} />
-        <Route path="setup-game" element={<SetupGame players={ playersList } />} />
+        <Route path="setup-game" element={<SetupGame players={ playersList } addPlayer={addPlayer} />} />
         <Route path="fun-facts" element={<FunFacts />} />
         <Route path="game-stage1" element={<NewGame />} />
         <Route path="game-stage2" element={<GameStageTwo />} />
