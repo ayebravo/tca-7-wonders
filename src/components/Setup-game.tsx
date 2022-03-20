@@ -83,7 +83,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
                 <Typography  variant="h6">Select Wonder (board): </Typography>
                 <WondersList />
             </div>
-           <Button variant="contained" size="large" color="success" onClick={() => nav("/end-of-game-scoring")}>Final Stage - Scoring</Button>
+           <Button variant="contained" size="large" color="success" onClick={() => nav("/end-of-game-scoring")}>Add my scores</Button>
            {/* When play game button is clicked, I want to get the start time timestamp for the current game */}
         </div>
     );
