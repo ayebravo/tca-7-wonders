@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import { player } from '../App';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+// import Alert from '@mui/material/Alert';
+// import Stack from '@mui/material/Stack';
 import '../styles/Setup-game.css';
 
 interface SetupGameProps {
@@ -20,6 +23,9 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
     const nav = useNavigate();
 
     const displayNameExistsErrorMessage = () => {
+        // <Stack sx={{ width: '100%' }} spacing={2}>
+        //     <Alert severity="error">The entered name already exists</Alert>
+        // </Stack>
         alert("The entered name already exists");
     }
 
@@ -27,11 +33,12 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
         const newPlayerInputFormatted = (newPlayerInput.charAt(0).toUpperCase() + newPlayerInput.slice(1)).trim();
         // Check if the input exist as a name in the players object
         const isNameInTheList = players.map(player => player.name).includes(newPlayerInputFormatted);
+        const newUniqueID = uuidv4();
 
         if (isNameInTheList === false) {
             addPlayer({
                 name: newPlayerInputFormatted,
-                order: players.length + 1
+                uniqueID: newUniqueID
             });
         } else {
             displayNameExistsErrorMessage()
@@ -76,7 +83,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
                 <Typography  variant="h6">Select Wonder (board): </Typography>
                 <WondersList />
             </div>
-           <Button variant="contained" size="large" color="success" onClick={() => nav("/game-stage1")}>Play Game</Button>
+           <Button variant="contained" size="large" color="success" onClick={() => nav("/end-of-game-scoring")}>Final Stage - Scoring</Button>
            {/* When play game button is clicked, I want to get the start time timestamp for the current game */}
         </div>
     );

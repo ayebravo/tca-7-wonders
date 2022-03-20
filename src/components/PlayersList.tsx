@@ -12,7 +12,7 @@ interface PlayersListProps {
 }
 
 const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData }) => {
-    const [checked, setChecked] = React.useState([1]);
+    const [checked, setChecked] = React.useState([0]);
   
     const handleToggle = (value: number) => () => {
       const currentIndex = checked.indexOf(value);
@@ -26,6 +26,8 @@ const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData }) => {
   
       setChecked(newChecked);
     };
+
+    // TODO: Fix so the "Me" player is checked by default
   
     return (
       <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }}>
@@ -33,12 +35,12 @@ const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData }) => {
           const labelId = `checkbox-list-secondary-label-${value.name}`;
           return (
             <ListItem
-              key={value.order}
+              key={value.uniqueID}
               secondaryAction={
                 <Checkbox
                   edge="end"
-                  onChange={handleToggle(value.order)}
-                  checked={checked.indexOf(value.order) !== -1}
+                  onChange={handleToggle(value.uniqueID)}
+                  checked={checked.indexOf(value.uniqueID) !== -1}
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               }

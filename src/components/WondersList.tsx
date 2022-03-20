@@ -25,16 +25,16 @@ const CheckboxListSecondary = () => {
   
     return (
       <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent'}}>
-        {[{name: "Olimpia", order: 1}].map((value) => {
+        {[{name: "Olimpia", uniqueID: 1}].map((value) => {
           const labelId = `checkbox-list-secondary-label-${value}`;
           return (
             <ListItem
-              key={value.order}
+              key={value.uniqueID}
               secondaryAction={
                 <Checkbox
                   edge="end"
-                  onChange={handleToggle(value.order)}
-                  checked={checked.indexOf(value.order) !== -1}
+                  onChange={handleToggle(value.uniqueID)}
+                  checked={checked.indexOf(value.uniqueID) !== -1}
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               }

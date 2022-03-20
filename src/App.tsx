@@ -3,30 +3,30 @@ import { Routes, Route } from 'react-router-dom';
 import Home from "./components/Home";
 import SetupGame from "./components/Setup-game";
 import FunFacts from "./components/Fun-facts";
-import NewGame from "./components/Game-stage1";
-import GameStageTwo from "./components/Game-stage2";
-import GameStageThree from "./components/Game-stage3";
+// import NewGame from "./components/Game-stage1";
+// import GameStageTwo from "./components/Game-stage2";
+import EndOfGameScoring from "./components/EndOfGame-Scoring";
 import './App.css';
 
 
 export interface player {
   name: string;
-  order: number;
+  uniqueID: string;
 }
 
 const playerOne: player = {
   name: "Me",
-  order: 1
+  uniqueID: "1"
 }
 
 const playerTwo: player = {
   name: "Sam",
-  order: 2
+  uniqueID: "2"
 }
 
 const playerThree: player = {
   name: "Santi",
-  order: 3
+  uniqueID: "3"
 }
 
 export interface gameResult {
@@ -45,25 +45,25 @@ export interface gameResult {
 const gameOne: gameResult = {
   formattedDate: "2022-01-03", 
   winner: "Me",
-  players: [{name: "Me", order: 1}, {name: "Sam", order: 2}]
+  players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}]
 }
 
 const gameTwo: gameResult = {
   formattedDate: "2022-01-16",
   winner: "Silvia",
-  players: [{name: "Me", order: 1}, {name: "Silvia", order: 2}, {name: "Fermin", order: 3}]
+  players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}]
 };
 
 const gameThree: gameResult = {
   formattedDate: "2022-02-16",
   winner: "Me",
-  players: [{name: "Me", order: 1}, {name: "Silvia", order: 2}, {name: "Fermin", order: 3}, {name: "Sam", order: 4}]
+  players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}, {name: "Sam", uniqueID: "4"}]
 };
 
 const gameFour: gameResult = {
   formattedDate: "2022-02-25",
   winner: "Sam",
-  players: [{name: "Me", order: 1}, {name: "Sam", order: 2}]
+  players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}]
 }
 
 const gameResults: gameResult[] = [
@@ -104,9 +104,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home gameResults={ results } />} />
         <Route path="setup-game" element={<SetupGame players={ playersList } addPlayer={addPlayer} />} />
         <Route path="fun-facts" element={<FunFacts />} />
-        <Route path="game-stage1" element={<NewGame />} />
-        <Route path="game-stage2" element={<GameStageTwo />} />
-        <Route path="game-stage3" element={<GameStageThree addGameResult={ addGameResult } />} />
+        <Route path="end-of-game-scoring" element={<EndOfGameScoring addGameResult={ addGameResult } />} />
       </Routes>
     </div>
   );

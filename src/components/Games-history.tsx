@@ -46,7 +46,7 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
                     {sortedRows.map((row: any) => (
                         <TableRow
                             key={row.formattedDate}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            sx={{ '&:last-child td, &:last-child th': { buniqueID: 0 } }}
                         >
                         <TableCell component="th" scope="row">
                             {/* {row.formattedDate} */}

@@ -1,0 +1,24 @@
+.Small-logo {
+	height: 25vmin;
+	cursor: pointer;
+	padding-top: 1em;
+	padding-bottom: 2em;
+}
+
+.wondersPointsContainer,
+.militaryPointsContainer,
+.treasuryPointsContainer,
+.civilianStructuresPointsContainer,
+.scientificPointsContainer,
+.commercialPointsContainer {
+	display: flex;
+	padding-bottom: 1em;
+}
+
+.endOfGameScoringSection div:last-child {
+	padding-bottom: 3em;
+}
+
+.endOfGameScoringSection .dialogHeading {
+	padding-bottom: 0;
+}
