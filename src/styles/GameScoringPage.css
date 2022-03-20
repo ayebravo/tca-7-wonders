@@ -5,6 +5,12 @@
 	padding-bottom: 2em;
 }
 
+.endOfGameScoringSection {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
 .wondersPointsContainer,
 .militaryPointsContainer,
 .treasuryPointsContainer,
