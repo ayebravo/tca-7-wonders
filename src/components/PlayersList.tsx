@@ -6,13 +6,15 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
+import { player } from '../App';
 
 interface PlayersListProps {
-    playersData: any[]
+    playersData: any[],
+    setChecked: (p: any) => void,
+    checked: any
 }
 
-const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData }) => {
-    const [checked, setChecked] = React.useState([0]);
+const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData, checked, setChecked }) => {
   
     const handleToggle = (value: number) => () => {
       const currentIndex = checked.indexOf(value);

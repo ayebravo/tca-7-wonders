@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-// import { format, compareAsc } from 'date-fns'; // package used to format dates
 import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -66,14 +65,12 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
     };
 
     const endGame = () => {
-        console.log(currentGame)
         // Add the new game result to the app data
         addGameResult({
-            // TODO: winner shouldn't be hard-coded
-            // TODO: formattedDate will likely be replaced by the properties:
+            // TODO: Work on winner property so they are not hard-coded
             start: currentGame.startTime,
             end: new Date().toISOString(),
-            formattedDate: "2022-12-21", 
+            // formattedDate: format(new Date(currentGame.startTime), 'yyyy/'),
             winner: "Me",
             players: currentGame.players
         });
@@ -281,7 +278,6 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                 </div>
             </div>
            <Button variant="contained" size="large" color="success" onClick={ endGame }>End Game</Button>
-           {/* When play game button is clicked, I want to get the end time timestamp for the current game */}
         </>
     );
 };

@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { format, compareAsc } from 'date-fns'; // package used to format dates
 import '../styles/Games-history.css';
 import { gameResult, player } from '../App';
 
@@ -19,13 +20,13 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
         return game.winner === "Me" ? "W" : "L"; 
     }
 
-    const createData = (formattedDate: string, players: player[], gameResult: string) => {
+    const createData = (end: string, players: player[], gameResult: string) => {
         const playersFormattedList = players.map(player => player.name).join(", ");
-        return { formattedDate, playersFormattedList, gameResult };
+        return { end, playersFormattedList, gameResult };
     };
 
-    const rows = gamesData.map((game:gameResult) => createData(game.formattedDate, game.players, getGameResult(game)));
-    const sortedRows = [...rows].sort((a, b) => a.formattedDate.localeCompare(b.formattedDate)).reverse();
+    const rows = gamesData.map((game:gameResult) => createData(game.end, game.players, getGameResult(game)));
+    const sortedRows = [...rows].sort((a, b) => a.end.localeCompare(b.end)).reverse();
 
     return (
         <div className='gamesHistoryContainer'>
@@ -49,8 +50,7 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
                             sx={{ '&:last-child td, &:last-child th': { uniqueID: 0 } }}
                         >
                         <TableCell component="th" scope="row">
-                            {/* {row.formattedDate} */}
-                            {new Date(row.formattedDate).toLocaleDateString()}
+                            {format(new Date(row.end), 'MM/dd/yyyy')}
                         </TableCell>
                         <TableCell align="left">{row.playersFormattedList}</TableCell>
                         <TableCell align="center">{row.gameResult}</TableCell>

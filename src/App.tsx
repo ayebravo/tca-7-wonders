@@ -15,11 +15,11 @@ export interface player {
 export interface gameResult {
   // TODO: Add function to calculate duration
   // TODO: See how to update a game's formattedDate and duration properties
-  formattedDate: string,
+  formattedDate?: string, // TODO: Delete property?
   winner: string,     
   players: player[]
   start?: string,
-  end?: string,
+  end: string,
   duration?: string
 }
 
@@ -44,13 +44,13 @@ const playerThree: player = {
 }
 
 const gameOne: gameResult = {
-  formattedDate: "2022-01-03", 
+  end: "2022-01-03", 
   winner: "Me",
   players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}]
 }
 
 const gameTwo: gameResult = {
-  formattedDate: "2022-01-16",
+  end: "2022-01-16",
   winner: "Silvia",
   players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}]
 };
@@ -76,6 +76,11 @@ const App: React.FC = () => {
   const [playersList, setPlayersList] = useState(players);
 
   const addGameResult = (singleGameResult: gameResult) => {
+    // TODO: Fix that the current game appears here fine, but always the hard-coded games are displayed + current game; the current game doesn't seem to be added to gameResults
+    // setResults here working properly?
+    
+    // console.log("game results", gameResults)
+    // console.log(singleGameResult)
     setResults([
       ...gameResults 
       , singleGameResult
@@ -88,6 +93,7 @@ const App: React.FC = () => {
       newPlayer
     ])
   };
+  // console.log("current game", currentGame);
 
   return (
     <div className="App">

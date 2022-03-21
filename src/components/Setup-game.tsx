@@ -21,6 +21,8 @@ interface SetupGameProps {
 
 const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGame }) => {
     const [newPlayerInput, setNewPlayerInput] = useState("");
+    const [checked, setChecked] = useState([""]);
+
     const nav = useNavigate();
 
     const displayNameExistsErrorMessage = () => {
@@ -54,27 +56,25 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
 
     const startGame = () => {
         // TODO: Delete if not used => Might use to then use date-fns package to format date => const startGameTimestamp = Date.now();
+        
         // Setup current game's start time and players
+        const checkedPlayers = players.filter(player => checked.includes(player.uniqueID));
+
         setCurrentGame({
             startTime: new Date().toISOString(),
-            players: [
-                players[0],
-                players[1],
-                {name: "Vicky", uniqueID: "11"}
-            ]
+            players: [...checkedPlayers]
         })
 
         // Navigate to scoring screen
-        nav("/end-of-game-scoring")
+        nav("/end-of-game-scoring");
     }
     
-    // TODO: Fix that only one new game seems to be added to the game results
     return (
         <div className='setupGameContainer'>
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
             <div className='selectPlayersContainer'>
                 <Typography  variant="h6">Select Players: </Typography>
-                <PlayersList playersData={ players } />
+                <PlayersList playersData={ players } checked={checked} setChecked={setChecked} />
             </div>
             <Box
                 component="form"
