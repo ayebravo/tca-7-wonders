@@ -21,7 +21,7 @@ interface SetupGameProps {
 
 const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGame }) => {
     const [newPlayerInput, setNewPlayerInput] = useState("");
-    const [checked, setChecked] = useState([""]);
+    const [checked, setChecked] = useState([players[0].uniqueID]);
 
     const nav = useNavigate();
 
