@@ -76,13 +76,8 @@ const App: React.FC = () => {
   const [playersList, setPlayersList] = useState(players);
 
   const addGameResult = (singleGameResult: gameResult) => {
-    // TODO: Fix that the current game appears here fine, but always the hard-coded games are displayed + current game; the current game doesn't seem to be added to gameResults
-    // setResults here working properly?
-    
-    // console.log("game results", gameResults)
-    // console.log(singleGameResult)
     setResults([
-      ...gameResults 
+      ...results 
       , singleGameResult
     ]);
   };
@@ -93,7 +88,6 @@ const App: React.FC = () => {
       newPlayer
     ])
   };
-  // console.log("current game", currentGame);
 
   return (
     <div className="App">

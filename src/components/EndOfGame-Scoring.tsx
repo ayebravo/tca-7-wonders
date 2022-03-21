@@ -18,6 +18,7 @@ interface NewGameProps {
 
 const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) => {
     const nav = useNavigate();
+
     const [openMilitaryPointsModal, setOpenMilitaryPointsModal] = useState(false);
     const [openTreasuryPointsModal, setOpenTreasuryPointsModal] = useState(false);
     const [openWondersPointsModal, setOpenWondersPointsModal] = useState(false);
@@ -70,7 +71,6 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
             // TODO: Work on winner property so they are not hard-coded
             start: currentGame.startTime,
             end: new Date().toISOString(),
-            // formattedDate: format(new Date(currentGame.startTime), 'yyyy/'),
             winner: "Me",
             players: currentGame.players
         });

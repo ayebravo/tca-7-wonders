@@ -25,6 +25,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
 
     const nav = useNavigate();
 
+    // TODO: Display inline error message if user exists instead of an alert
     const displayNameExistsErrorMessage = () => {
         // <Stack sx={{ width: '100%' }} spacing={2}>
         //     <Alert severity="error">The entered name already exists</Alert>
