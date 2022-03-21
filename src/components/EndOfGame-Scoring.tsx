@@ -9,14 +9,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
-import { gameResult } from '../App';
+import { currentGame, gameResult } from '../App';
 import '../styles/GameScoringPage.css';
 
 interface NewGameProps {
     addGameResult: (result: gameResult) => void;
+    currentGame: currentGame
 }
 
-const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult}) => {
+const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) => {
     const nav = useNavigate();
     const [openMilitaryPointsModal, setOpenMilitaryPointsModal] = useState(false);
     const [openTreasuryPointsModal, setOpenTreasuryPointsModal] = useState(false);
@@ -65,14 +66,16 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult}) => {
     };
 
     const endGame = () => {
+        console.log(currentGame)
         // Add the new game result to the app data
         addGameResult({
+            // TODO: winner shouldn't be hard-coded
             // TODO: formattedDate will likely be replaced by the properties:
-            // start: currentGame.start,
-            // end: new Date().toISOString()
+            start: currentGame.startTime,
+            end: new Date().toISOString(),
             formattedDate: "2022-12-21", 
             winner: "Me",
-            players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}, {name: "Mike", uniqueID: "3"}]
+            players: currentGame.players
         });
 
         // Navigate to the Home page

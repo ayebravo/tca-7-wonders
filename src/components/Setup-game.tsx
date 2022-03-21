@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PlayersList from './PlayersList';
 import WondersList from './WondersList';
 import Typography from '@mui/material/Typography';
-import { player } from '../App';
+import { currentGame, player } from '../App';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 // import Alert from '@mui/material/Alert';
@@ -16,9 +16,10 @@ import '../styles/Setup-game.css';
 interface SetupGameProps {
     players: player[],
     addPlayer: (p: player) => void;
+    setCurrentGame: (game: currentGame) => void;
 }
 
-const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
+const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGame }) => {
     const [newPlayerInput, setNewPlayerInput] = useState("");
     const nav = useNavigate();
 
@@ -50,7 +51,24 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
     const handleInputChange = (event: any) => {
         setNewPlayerInput(event.target.value);
     }
+
+    const startGame = () => {
+        // TODO: Delete if not used => Might use to then use date-fns package to format date => const startGameTimestamp = Date.now();
+        // Setup current game's start time and players
+        setCurrentGame({
+            startTime: new Date().toISOString(),
+            players: [
+                players[0],
+                players[1],
+                {name: "Vicky", uniqueID: "11"}
+            ]
+        })
+
+        // Navigate to scoring screen
+        nav("/end-of-game-scoring")
+    }
     
+    // TODO: Fix that only one new game seems to be added to the game results
     return (
         <div className='setupGameContainer'>
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
@@ -83,7 +101,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer }) => {
                 <Typography  variant="h6">Select Wonder (board): </Typography>
                 <WondersList />
             </div>
-           <Button variant="contained" size="large" color="success" onClick={() => nav("/end-of-game-scoring")}>Add my scores</Button>
+           <Button variant="contained" size="large" color="success" onClick={startGame}>Start Game</Button>
            {/* When play game button is clicked, I want to get the start time timestamp for the current game */}
         </div>
     );
