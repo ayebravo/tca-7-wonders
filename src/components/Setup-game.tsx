@@ -51,6 +51,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
     }
 
     const handleInputChange = (event: any) => {
+        event.preventDefault();
         setNewPlayerInput(event.target.value);
     }
 

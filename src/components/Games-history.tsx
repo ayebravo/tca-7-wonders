@@ -46,10 +46,10 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
                     <TableBody>
                     {sortedRows.map((row: any) => (
                         <TableRow
-                            key={row.formattedDate}
+                            key={`row_${row.uniqueID}`}
                             sx={{ '&:last-child td, &:last-child th': { uniqueID: 0 } }}
                         >
-                        <TableCell component="th" scope="row">
+                        <TableCell key={`cell${row.uniqueID}`} component="th" scope="row">
                             {format(new Date(row.end), 'MM/dd/yyyy')}
                         </TableCell>
                         <TableCell align="left">{row.playersFormattedList}</TableCell>
