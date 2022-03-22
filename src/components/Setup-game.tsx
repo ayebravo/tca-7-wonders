@@ -4,9 +4,9 @@ import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import PlayersList from './PlayersList';
-import WondersList from './WondersList';
+import WonderOptions from './WonderOptions';
 import Typography from '@mui/material/Typography';
-import { currentGame, player } from '../App';
+import { currentGame, player, wonder } from '../App';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 // import Alert from '@mui/material/Alert';
@@ -15,14 +15,17 @@ import '../styles/Setup-game.css';
 
 interface SetupGameProps {
     players: player[],
-    addPlayer: (p: player) => void;
-    setCurrentGame: (game: currentGame) => void;
+    addPlayer: (p: player) => void,
+    setCurrentGame: (game: currentGame) => void,
+    setCheckedPlayersList: (p: any) => void,
+    checkedPlayersList: any,
+    wonders: wonder[],
+    wonderValue: any,
+    setWonderValue: (wonder: any) => void
 }
 
-const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGame }) => {
+const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGame, checkedPlayersList, setCheckedPlayersList, wonders, wonderValue, setWonderValue}) => {
     const [newPlayerInput, setNewPlayerInput] = useState("");
-    const [checked, setChecked] = useState([players[0].uniqueID]);
-
     const nav = useNavigate();
 
     // TODO: Display inline error message if user exists instead of an alert
@@ -47,12 +50,11 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
         } else {
             displayNameExistsErrorMessage()
         }
-        
+
         setNewPlayerInput(""); // Reset new player's input to reset the text field
     }
 
     const handleInputChange = (event: any) => {
-        event.preventDefault();
         setNewPlayerInput(event.target.value);
     }
 
@@ -60,11 +62,13 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
         // TODO: Delete if not used => Might use to then use date-fns package to format date => const startGameTimestamp = Date.now();
         
         // Setup current game's start time and players
-        const checkedPlayers = players.filter(player => checked.includes(player.uniqueID));
+        const checkedPlayers = players.filter(player => checkedPlayersList.includes(player.uniqueID));
+        const checkedWonder = wonders.filter(wonder => wonder.uniqueID === wonderValue);
 
         setCurrentGame({
             startTime: new Date().toISOString(),
-            players: [...checkedPlayers]
+            players: [...checkedPlayers],
+            wonder: checkedWonder[0].name
         })
 
         // Navigate to scoring screen
@@ -76,7 +80,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
             <div className='selectPlayersContainer'>
                 <Typography  variant="h6">Select Players: </Typography>
-                <PlayersList playersData={ players } checked={checked} setChecked={setChecked} />
+                <PlayersList playersData={ players } checkedPlayersList={checkedPlayersList} setCheckedPlayersList={setCheckedPlayersList} />
             </div>
             <Box
                 component="form"
@@ -94,14 +98,14 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
                         value={newPlayerInput}
                         onChange={handleInputChange}
                     />
-                    <Button variant="outlined" size="medium" color="success" onClick={ addPlayerToList }>
+                    <Button variant="outlined" type='submit' size="medium" color="success" onClick={ addPlayerToList }>
                         Add player
                     </Button>
                 </div>
             </Box>
             <div className='selectWonderContainer'>
                 <Typography  variant="h6">Select Wonder (board): </Typography>
-                <WondersList />
+                <WonderOptions wondersData={wonders} wonderValue={wonderValue} setWonderValue={setWonderValue}/>
             </div>
            <Button variant="contained" size="large" color="success" onClick={startGame}>Start Game</Button>
            {/* When play game button is clicked, I want to get the start time timestamp for the current game */}

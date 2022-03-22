@@ -18,7 +18,11 @@ interface NewGameProps {
 
 const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) => {
     const nav = useNavigate();
-
+    // TODO: Try to have one useState that is an object:
+    // const [open, setOpen] = useState({
+    //     openMilitaryPointsModal: false,
+    //     openTreasuryPointsModal: false
+    // })
     const [openMilitaryPointsModal, setOpenMilitaryPointsModal] = useState(false);
     const [openTreasuryPointsModal, setOpenTreasuryPointsModal] = useState(false);
     const [openWondersPointsModal, setOpenWondersPointsModal] = useState(false);
@@ -72,7 +76,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
             start: currentGame.startTime,
             end: new Date().toISOString(),
             winner: "Me",
-            players: currentGame.players
+            players: currentGame.players,
+            wonder: currentGame.wonder
         });
 
         // Navigate to the Home page

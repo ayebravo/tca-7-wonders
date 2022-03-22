@@ -6,19 +6,18 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
-import { player } from '../App';
 
 interface PlayersListProps {
     playersData: any[],
-    setChecked: (p: any) => void,
-    checked: any
+    setCheckedPlayersList: (p: any) => void,
+    checkedPlayersList: any
 }
 
-const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData, checked, setChecked }) => {
+const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData, checkedPlayersList, setCheckedPlayersList }) => {
   
     const handleToggle = (value: number) => () => {
-      const currentIndex = checked.indexOf(value);
-      const newChecked = [...checked];
+      const currentIndex = checkedPlayersList.indexOf(value);
+      const newChecked = [...checkedPlayersList];
   
       if (currentIndex === -1) {
         newChecked.push(value);
@@ -26,8 +25,10 @@ const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData, checke
         newChecked.splice(currentIndex, 1);
       }
   
-      setChecked(newChecked);
+      setCheckedPlayersList(newChecked);
     };
+
+    // TODO: Fix so the "Me" player is checked by default
   
     return (
       <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }}>
@@ -40,7 +41,7 @@ const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData, checke
                 <Checkbox
                   edge="end"
                   onChange={handleToggle(value.uniqueID)}
-                  checked={checked.indexOf(value.uniqueID) !== -1}
+                  checked={checkedPlayersList.indexOf(value.uniqueID) !== -1}
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               }
