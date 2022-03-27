@@ -20,7 +20,16 @@ export interface gameResult {
   start?: string,
   end: string,
   duration?: string
-  wonder?: string
+  wonder?: string,
+  points?: {
+    military: number,
+    treasury: number,
+    wonder: number,
+    civilian: number,
+    scientific: number,
+    commercial: number,
+    guild: number
+  }
 }
 
 export interface currentGame {
