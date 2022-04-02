@@ -8,16 +8,31 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
+import Checkbox from '@mui/material/Checkbox';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import { currentGame, gameResult } from '../App';
 import '../styles/GameScoringPage.css';
 
 interface NewGameProps {
-    addGameResult: (result: gameResult) => void;
-    currentGame: currentGame
+    addGameResult: (result: gameResult) => void,
+    currentGame: currentGame,
+    displayAlertMessage: any,
+    setDisplayAlertMessage: (message: any) => void
 }
 
-const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) => {
+const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, displayAlertMessage, setDisplayAlertMessage}) => {
     const nav = useNavigate();
+    const [allScoresEntered, setAllScoresEntered] = useState(false);
+    const [isInputEntered, setIsInputEntered] = useState({
+        military: false,
+        treasury: false,
+        wonder: false,
+        civilian: false,
+        scientific: false,
+        commercial: false,
+        guild: false
+    });
 
     const [gameScoresInput, setGameScoresInput] = useState({
         military: 0,
@@ -36,11 +51,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
     const [openScientificPointsModal, setOpenScientificPointsModal] = useState(false);
     const [openCommercialPointsModal, setOpenCommercialPointsModal] = useState(false);
     const [openGuildPointsModal, setOpenGuildPointsModal] = useState(false);
-    // TODO: Try to have one useState that is an object:
-    // const [open, setOpen] = useState({
-    //     openMilitaryPointsModal: false,
-    //     openTreasuryPointsModal: false
-    // })
+
     const gameScoresArray: number[] = [];
     
     const handleClickOpen = (modalID: string) => {
@@ -80,7 +91,6 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
 
     };
 
-    // TODO: Add some way of checking if the user already entered a specific score and/or a progress bar to give feedback to the user
     const setScores = (inputValue: string, scoreType: string) => {
         const militaryInput = scoreType === "military" ? parseInt(inputValue) : gameScoresInput.military;
         const treasuryInput = scoreType === "treasury" ? parseInt(inputValue) : gameScoresInput.treasury;
@@ -99,6 +109,18 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
             commercial: commercialInput,
             guild: guildInput
         })
+    }
+
+    const handleInputCheckbox = (scoreType: string) => {
+        setIsInputEntered({
+            military: scoreType === "militaryPoints" ? !isInputEntered["military"] : isInputEntered["military"],
+            treasury: scoreType === "treasuryPoints" ? !isInputEntered["treasury"] : isInputEntered["treasury"],
+            wonder: scoreType === "wonderPoints" ? !isInputEntered["wonder"] : isInputEntered["wonder"],
+            civilian: scoreType === "civilianStructuresPoints" ? !isInputEntered["civilian"] : isInputEntered["civilian"],
+            scientific: scoreType === "scientificPoints" ? !isInputEntered["scientific"] : isInputEntered["scientific"],
+            commercial: scoreType === "commercialPoints" ? !isInputEntered["commercial"] : isInputEntered["commercial"],
+            guild: scoreType === "guildPoints" ? !isInputEntered["guild"] : isInputEntered["guild"]
+        });
     }
 
     const addGameScore = (scoreType: string) => {
@@ -126,36 +148,52 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
         }
 
         setGameScores([...gameScores, ...gameScoresArray]);
+        handleInputCheckbox(scoreType);
     };
 
-    const endGame = () => {
-        // Add the new game result to the app data
-        addGameResult({
-            // TODO: Work on winner property so they are not hard-coded
-            start: currentGame.startTime,
-            end: new Date().toISOString(),
-            winner: "Me",
-            players: currentGame.players,
-            wonder: currentGame.wonder,
-            points: {
-                military: gameScores[0],
-                treasury: gameScores[1],
-                wonder: gameScores[2],
-                civilian: gameScores[3],
-                scientific: gameScores[4],
-                commercial: gameScores[5],
-                guild: gameScores[6]
-            }
-        });
+    const validateEndingGame = () => {
+        const scoresEnteredCheck = Object.entries(isInputEntered).filter((key, value) => key[1] === false);
+        if (scoresEnteredCheck.length === 0) {
+            setAllScoresEntered(true);
+            setDisplayAlertMessage(false);
+        } else {
+            setDisplayAlertMessage(true);
+        }
+    }
 
-        // Navigate to the Home page
-        nav("/");
+    const endGame = () => {
+        if (allScoresEntered === true) {
+             // Add the new game result to the app data
+            addGameResult({
+                // TODO: Work on winner property so they are not hard-coded
+                start: currentGame.startTime,
+                end: new Date().toISOString(),
+                winner: "Me",
+                players: currentGame.players,
+                wonder: currentGame.wonder,
+                points: {
+                    military: gameScores[0],
+                    treasury: gameScores[1],
+                    wonder: gameScores[2],
+                    civilian: gameScores[3],
+                    scientific: gameScores[4],
+                    commercial: gameScores[5],
+                    guild: gameScores[6]
+                }
+            });
+
+            // Navigate to the Home page
+            nav("/");
+        } else {
+            return;
+        }
+       
     }
 
     // TODO: Add Civilian Structures, scientific, commercial, and guild points instructions in the DialogContentText
 
     return (
-        <> 
+        <div className="endOfGameContainer"> 
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
            <h1>Game Scores</h1>
            <div className='endOfGameScoringSection'>
@@ -186,7 +224,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("militaryPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["military"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+                
                 <div className='treasuryPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpen("treasuryPoints")}>
                         Add treasury points
@@ -214,7 +258,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("treasuryPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["treasury"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+
                 <div className='wondersPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpen("wonderPoints")}>
                         Add wonder points
@@ -242,7 +292,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("wonderPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["wonder"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+
                 <div className='civilianStructuresPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpen("civilianStructuresPoints")}>
                         Add civilian points
@@ -270,7 +326,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("civilianStructuresPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["civilian"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+
                 <div className='scientificPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpen("scientificPoints")}>
                         Add scientific points
@@ -298,7 +360,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("scientificPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["scientific"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+
                 <div className='commercialPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpen("commercialPoints")}>
                         Add commercial points
@@ -326,7 +394,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("commercialPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["commercial"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+
                 <div className='guildPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpen("guildPoints")}>
                         Add guild points
@@ -354,10 +428,23 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame}) 
                             <Button onClick={() => addGameScore("guildPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
+                    <Checkbox
+                        checked={isInputEntered["guild"]}
+                        color="success"
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                 </div>
+
             </div>
-           <Button variant="contained" size="large" color="success" onClick={ endGame }>End Game</Button>
-        </>
+           <Button variant="contained" size="large" color="success" onClick={ validateEndingGame }>End Game</Button>
+           {
+               displayAlertMessage === false 
+                ? endGame()
+                :  <Stack sx={{ padding: "1em 0"}}>
+                     <Alert severity="error">Please enter all the game scores.</Alert>
+                   </Stack>
+           }
+        </div>
     );
 };
 

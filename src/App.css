@@ -9,3 +9,7 @@
 	font-size: calc(10px + 2vmin);
 	color: #000000;
 }
+
+.App.bottomScreen {
+	overflow-y: auto;
+}

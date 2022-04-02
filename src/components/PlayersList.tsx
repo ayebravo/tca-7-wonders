@@ -28,7 +28,6 @@ const CheckboxListSecondary: React.FC<PlayersListProps> = ({ playersData, checke
       setCheckedPlayersList(newChecked);
     };
 
-    // TODO: Fix so the "Me" player is checked by default
   
     return (
       <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }}>
