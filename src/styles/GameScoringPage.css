@@ -5,6 +5,10 @@
 	padding-bottom: 2em;
 }
 
+.endOfGameContainer {
+	overflow-y: scroll;
+}
+
 .endOfGameScoringSection {
 	display: flex;
 	flex-direction: column;

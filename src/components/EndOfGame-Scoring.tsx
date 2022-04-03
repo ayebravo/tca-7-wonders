@@ -9,21 +9,45 @@ import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import Checkbox from '@mui/material/Checkbox';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
 import { currentGame, gameResult } from '../App';
 import '../styles/GameScoringPage.css';
 
 interface NewGameProps {
     addGameResult: (result: gameResult) => void,
-    currentGame: currentGame,
-    displayAlertMessage: any,
-    setDisplayAlertMessage: (message: any) => void
+    currentGame: currentGame
 }
 
-const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, displayAlertMessage, setDisplayAlertMessage}) => {
+const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }) => {
     const nav = useNavigate();
+
+    // Popover section
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+    const handleClickPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClosePopover = () => {
+        setAnchorEl(null);
+    };
+
+    const openPopover = Boolean(anchorEl);
+    const idPopover = openPopover ? 'simple-popover' : undefined;
+    // End popover section
+
+    const [validInput, setValidInput] = useState({
+        military: false,
+        treasury: false,
+        wonder: false,
+        civilian: false,
+        scientific: false,
+        commercial: false,
+        guild: false
+    });
     const [allScoresEntered, setAllScoresEntered] = useState(false);
+    const [displayAlertMessage, setDisplayAlertMessage] = useState(false);
     const [isInputEntered, setIsInputEntered] = useState({
         military: false,
         treasury: false,
@@ -53,8 +77,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
     const [openGuildPointsModal, setOpenGuildPointsModal] = useState(false);
 
     const gameScoresArray: number[] = [];
-    
-    const handleClickOpen = (modalID: string) => {
+
+    const handleClickOpenModal = (modalID: string) => {
         if (modalID === "militaryPoints") {
             setOpenMilitaryPointsModal(true)
         } else if (modalID === "treasuryPoints") {
@@ -72,7 +96,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
         }
     };
   
-    const handleClose = (modalID: string) => {
+    const handleCloseModal = (modalID: string) => {
         if (modalID === "militaryPoints") {
             setOpenMilitaryPointsModal(false)
         } else if (modalID === "treasuryPoints") {
@@ -92,13 +116,78 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
     };
 
     const setScores = (inputValue: string, scoreType: string) => {
-        const militaryInput = scoreType === "military" ? parseInt(inputValue) : gameScoresInput.military;
-        const treasuryInput = scoreType === "treasury" ? parseInt(inputValue) : gameScoresInput.treasury;
-        const wonderInput = scoreType === "wonder" ? parseInt(inputValue) : gameScoresInput.wonder;
-        const civilianInput = scoreType === "civilian" ? parseInt(inputValue) : gameScoresInput.civilian;
-        const scientificInput = scoreType === "scientific" ? parseInt(inputValue) : gameScoresInput.scientific;
-        const commercialInput = scoreType === "commercial" ? parseInt(inputValue) : gameScoresInput.commercial;
-        const guildInput = scoreType === "guild" ? parseInt(inputValue) : gameScoresInput.guild;
+        let militaryInput = gameScoresInput.military;
+        let treasuryInput = gameScoresInput.treasury;
+        let wonderInput = gameScoresInput.wonder;
+        let civilianInput = gameScoresInput.civilian;
+        let scientificInput = gameScoresInput.scientific;
+        let commercialInput = gameScoresInput.commercial;
+        let guildInput = gameScoresInput.guild;
+
+        // TODO: Delete (another way of setting the value of a property in a variable state that is an object)
+        // setValidInput(validInput => ({
+        //     ...validInput,
+        //     military: true
+        // })
+        // );
+        
+        // TODO: Fix that checking validInput for each type is not working properly. Even if inputValue matches the regex expression, the text field appears red.
+        if (scoreType === "military") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, military: true});
+                militaryInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, military: false});
+            }
+            
+        } else if (scoreType === "treasury") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, treasury: true});
+                treasuryInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, treasury: false});
+            }
+        } else if (scoreType === "wonder") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, wonder: true});
+                wonderInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, wonder: false});
+                // wonderInput = gameScoresInput.wonder;
+            }
+        } else if (scoreType === "civilian") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, civilian: true});
+                civilianInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, civilian: false});
+                // civilianInput = gameScoresInput.civilian;
+            }
+        } else if (scoreType === "scientific") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, scientific: true});
+                scientificInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, scientific: false});
+                // scientificInput = gameScoresInput.scientific;
+            }
+        } else if (scoreType === "commercial") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, commercial: true});
+                commercialInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, commercial: false});
+                // commercialInput = gameScoresInput.commercial;
+            }
+        } else if (scoreType === "guild") {
+            if (inputValue.match("^[0-9]*$")) {
+                setValidInput({...validInput, guild: true});
+                guildInput = parseInt(inputValue);
+            } else {
+                setValidInput({...validInput, guild: false});
+                // guildInput = gameScoresInput.guild;
+            }
+        }
 
         setGameScoresInput({
             military: militaryInput,
@@ -123,41 +212,44 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
         });
     }
 
+     // TODO: Fix code so the scores only get added if validInput for each category is true
     const addGameScore = (scoreType: string) => {
+
         if (scoreType === "militaryPoints") {
             gameScoresArray.push(gameScoresInput.military);
-            handleClose("militaryPoints");
+            handleCloseModal("militaryPoints");
         } else if (scoreType === "treasuryPoints") {
             gameScoresArray.push(gameScoresInput.treasury);
-            handleClose("treasuryPoints");
+            handleCloseModal("treasuryPoints");
         } else if (scoreType === "wonderPoints") {
             gameScoresArray.push(gameScoresInput.wonder);
-            handleClose("wonderPoints");
+            handleCloseModal("wonderPoints");
         } else if (scoreType === "civilianStructuresPoints") {
             gameScoresArray.push(gameScoresInput.civilian);
-            handleClose("civilianStructuresPoints");
+            handleCloseModal("civilianStructuresPoints");
         } else if (scoreType === "scientificPoints") {
             gameScoresArray.push(gameScoresInput.scientific);
-            handleClose("scientificPoints");
+            handleCloseModal("scientificPoints");
         } else if (scoreType === "commercialPoints") {
             gameScoresArray.push(gameScoresInput.commercial);
-            handleClose("commercialPoints");
+            handleCloseModal("commercialPoints");
         } else if (scoreType === "guildPoints") {
             gameScoresArray.push(gameScoresInput.guild);
-            handleClose("guildPoints");
+            handleCloseModal("guildPoints");
         }
 
         setGameScores([...gameScores, ...gameScoresArray]);
         handleInputCheckbox(scoreType);
     };
 
-    const validateEndingGame = () => {
+    const validateEndingGame = (e: any) => {
         const scoresEnteredCheck = Object.entries(isInputEntered).filter((key, value) => key[1] === false);
         if (scoresEnteredCheck.length === 0) {
             setAllScoresEntered(true);
             setDisplayAlertMessage(false);
         } else {
             setDisplayAlertMessage(true);
+            handleClickPopover(e);
         }
     }
 
@@ -198,10 +290,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
            <h1>Game Scores</h1>
            <div className='endOfGameScoringSection'>
                 <div className='militaryPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("militaryPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("militaryPoints")}>
                         Add military points
                     </Button>
-                    <Dialog open={openMilitaryPointsModal} onClose={() => handleClose("militaryPoints")}>
+                    <Dialog open={openMilitaryPointsModal} onClose={() => handleCloseModal("militaryPoints")}>
                         <DialogTitle className='dialogHeading'>Military Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -209,6 +301,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["military"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="militaryPoints"
@@ -220,7 +314,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                             </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("militaryPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("militaryPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("militaryPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -232,10 +326,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
                 
                 <div className='treasuryPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("treasuryPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("treasuryPoints")}>
                         Add treasury points
                     </Button>
-                    <Dialog open={openTreasuryPointsModal} onClose={() => handleClose("treasuryPoints")}>
+                    <Dialog open={openTreasuryPointsModal} onClose={() => handleCloseModal("treasuryPoints")}>
                         <DialogTitle className='dialogHeading'>Treasury Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -243,6 +337,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["treasury"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="treasuryPoints"
@@ -254,7 +350,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("treasuryPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("treasuryPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("treasuryPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -266,10 +362,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
 
                 <div className='wondersPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("wonderPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("wonderPoints")}>
                         Add wonder points
                     </Button>
-                    <Dialog open={openWondersPointsModal} onClose={() => handleClose("wonderPoints")}>
+                    <Dialog open={openWondersPointsModal} onClose={() => handleCloseModal("wonderPoints")}>
                         <DialogTitle className='dialogHeading'>Stage 3 - Wonder Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -277,6 +373,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["wonder"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="wonderPoints"
@@ -288,7 +386,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("wonderPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("wonderPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("wonderPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -300,10 +398,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
 
                 <div className='civilianStructuresPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("civilianStructuresPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("civilianStructuresPoints")}>
                         Add civilian points
                     </Button>
-                    <Dialog open={openCivilianStructuresModal} onClose={() => handleClose("civilianStructuresPoints")}>
+                    <Dialog open={openCivilianStructuresModal} onClose={() => handleCloseModal("civilianStructuresPoints")}>
                         <DialogTitle className='dialogHeading'>Civilian Structures Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -311,6 +409,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["civilian"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="civilianStructuresPoints"
@@ -322,7 +422,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("civilianStructuresPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("civilianStructuresPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("civilianStructuresPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -334,10 +434,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
 
                 <div className='scientificPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("scientificPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("scientificPoints")}>
                         Add scientific points
                     </Button>
-                    <Dialog open={openScientificPointsModal} onClose={() => handleClose("scientificPoints")}>
+                    <Dialog open={openScientificPointsModal} onClose={() => handleCloseModal("scientificPoints")}>
                         <DialogTitle className='dialogHeading'>Scientific Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -345,6 +445,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["scientific"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="scientificPoints"
@@ -356,7 +458,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("scientificPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("scientificPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("scientificPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -368,10 +470,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
 
                 <div className='commercialPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("commercialPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("commercialPoints")}>
                         Add commercial points
                     </Button>
-                    <Dialog open={openCommercialPointsModal} onClose={() => handleClose("commercialPoints")}>
+                    <Dialog open={openCommercialPointsModal} onClose={() => handleCloseModal("commercialPoints")}>
                         <DialogTitle className='dialogHeading'>Commercial Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -379,6 +481,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["commercial"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="commercialPoints"
@@ -390,7 +494,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("commercialPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("commercialPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("commercialPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -402,10 +506,10 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
 
                 <div className='guildPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpen("guildPoints")}>
+                    <Button variant="contained" onClick={() => handleClickOpenModal("guildPoints")}>
                         Add guild points
                     </Button>
-                    <Dialog open={openGuildPointsModal} onClose={() => handleClose("guildPoints")}>
+                    <Dialog open={openGuildPointsModal} onClose={() => handleCloseModal("guildPoints")}>
                         <DialogTitle className='dialogHeading'>Guild Points</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -413,6 +517,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             </DialogContentText>
                             <TextField
                                 autoFocus
+                                error={validInput["guild"]}
+                                helperText="Format: Only numeric values 0-9"
                                 autoComplete='off'
                                 margin="dense"
                                 id="guildPoints"
@@ -424,7 +530,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => handleClose("guildPoints")}>Cancel</Button>
+                            <Button onClick={() => handleCloseModal("guildPoints")}>Cancel</Button>
                             <Button onClick={() => addGameScore("guildPoints")}>Add points</Button>
                         </DialogActions>
                     </Dialog>
@@ -436,13 +542,32 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({addGameResult, currentGame, d
                 </div>
 
             </div>
-           <Button variant="contained" size="large" color="success" onClick={ validateEndingGame }>End Game</Button>
-           {
+           <Button variant="contained" size="large" color="success" onClick={ (e) => {
+               validateEndingGame(e);
+            }}
+            >End Game</Button>
+            {
                displayAlertMessage === false 
                 ? endGame()
-                :  <Stack sx={{ padding: "1em 0"}}>
-                     <Alert severity="error">Please enter all the game scores.</Alert>
-                   </Stack>
+                :  anchorEl !== null 
+                    ?
+                        <Popover
+                            id={idPopover}
+                            open={openPopover}
+                            anchorEl={anchorEl}
+                            onClose={handleClosePopover}
+                            anchorOrigin={{
+                                vertical: 'center',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'center',
+                                horizontal: 'center',
+                            }}
+                    >
+                        <Typography sx={{ p: 2 }}>Please enter all the scores</Typography>
+                    </Popover>
+                    : <></>
            }
         </div>
     );

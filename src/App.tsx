@@ -99,7 +99,6 @@ const App: React.FC = () => {
   const [playersList, setPlayersList] = useState(players);
   const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0].uniqueID]);
   const [wonderValue, setWonderValue] = useState(wonders[0].uniqueID);
-  const [displayAlertMessage, setDisplayAlertMessage] = useState(false);
 
   const addGameResult = (singleGameResult: gameResult) => {
     setResults([
@@ -120,7 +119,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`App ${displayAlertMessage === true ? "bottomScreen" : "topScreen"}`}>
+    <div className="App">
       <Routes>
         <Route path="/" element={<Home gameResults={ results } />} />
         <Route path="setup-game" 
@@ -137,12 +136,7 @@ const App: React.FC = () => {
               } />
         <Route path="fun-facts" element={<FunFacts />} />
         <Route path="end-of-game-scoring" 
-               element={<EndOfGameScoring 
-                  addGameResult={ addGameResult } 
-                  currentGame={currentGame}
-                  displayAlertMessage={displayAlertMessage}
-                  setDisplayAlertMessage={setDisplayAlertMessage}
-              />} />
+               element={<EndOfGameScoring addGameResult={ addGameResult } currentGame={currentGame}/>} />
       </Routes>
     </div>
   );
