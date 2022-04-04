@@ -22,11 +22,9 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
     const [gameResultSelection, setGameResultSelection] = useState("");
 
     useEffect(() => {
-        if (gameResults && gameResults.length > 0 && gameResults[gameResults.length - 1].totalScore) {
-            const totalScore = gameResults[gameResults.length - 1].totalScore !== undefined ? gameResults[gameResults.length - 1].totalScore : "N/A";
-            setLatestGameTotalScore(totalScore);
-        }
-    }, [gameResults]);
+        const totalScore = gameScores.length > 0 ? gameScores.reduce((partialSum, a) => partialSum + a, 0) : 0;
+        setLatestGameTotalScore(totalScore);
+    }, [gameScores]);
 
     useEffect(() => {
         if (gameResultSelection !== "") {
@@ -43,13 +41,11 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
     }
 
     const endGame = () => {
-        const totalScore = gameScores.reduce((partialSum, a) => partialSum + a, 0);
-
-            // Add the new game result to the app data
+        // Add the new game result to the app data
         addGameResult({
             start: currentGame.startTime,
             end: new Date().toISOString(),
-            winner: gameResultSelection,
+            gameResult: gameResultSelection,
             players: currentGame.players,
             wonder: currentGame.wonder,
             points: {
@@ -61,7 +57,7 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
                 commercial: gameScores[5],
                 guild: gameScores[6]
             },
-            totalScore: totalScore
+            totalScore: latestGameTotalScore
         });
 
         // Navigate to the home page

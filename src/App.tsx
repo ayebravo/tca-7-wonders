@@ -16,7 +16,7 @@ export interface player {
 export interface gameResult {
   // TODO: Add function to calculate duration
   // TODO: Make all properties required once I delete hard-coded games
-  winner: string,     
+  gameResult: string,     
   players: player[]
   start?: string,
   end: string,
@@ -31,7 +31,7 @@ export interface gameResult {
     commercial: number,
     guild: number
   },
-  totalScore: number | any
+  totalScore: number
 }
 
 export interface currentGame {
@@ -62,14 +62,14 @@ const playerThree: player = {
 
 const gameOne: gameResult = {
   end: "2022-01-03", 
-  winner: "Me",
+  gameResult: "W",
   players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}],
   totalScore: 20
 }
 
 const gameTwo: gameResult = {
   end: "2022-01-16",
-  winner: "Silvia",
+  gameResult: "L",
   players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}],
   totalScore: 10
 };

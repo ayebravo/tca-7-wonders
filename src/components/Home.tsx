@@ -17,7 +17,7 @@ const Home: React.FC<HomeProps> = ({ gameResults }) => {
 
     return (
         <>
-            <img src={Logo} className="Home-logo" alt="logo" />
+            <Button onClick={() => nav("/")}><img src={Logo} className="Home-logo" alt="logo" /></Button>
             <Stack className="Home-buttons-section" spacing={3}>
                 <Button variant="contained" startIcon={<CasinoOutlinedIcon />} size="large" color="success" onClick={() => nav("/setup-game")}>
                     New Game
