@@ -38,13 +38,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
     // End popover section
 
     const [validInput, setValidInput] = useState({
-        military: false,
-        treasury: false,
-        wonder: false,
-        civilian: false,
-        scientific: false,
-        commercial: false,
-        guild: false
+        military: true,
+        treasury: true,
+        wonder: true,
+        civilian: true,
+        scientific: true,
+        commercial: true,
+        guild: true
     });
     const [allScoresEntered, setAllScoresEntered] = useState(false);
     const [displayAlertMessage, setDisplayAlertMessage] = useState(false);
@@ -116,6 +116,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
     };
 
     const setScores = (inputValue: string, scoreType: string) => {
+        const regexExpression = new RegExp("^[0-9]+$");
+
         let militaryInput = gameScoresInput.military;
         let treasuryInput = gameScoresInput.treasury;
         let wonderInput = gameScoresInput.wonder;
@@ -123,69 +125,56 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
         let scientificInput = gameScoresInput.scientific;
         let commercialInput = gameScoresInput.commercial;
         let guildInput = gameScoresInput.guild;
-
-        // TODO: Delete (another way of setting the value of a property in a variable state that is an object)
-        // setValidInput(validInput => ({
-        //     ...validInput,
-        //     military: true
-        // })
-        // );
         
-        // TODO: Fix that checking validInput for each type is not working properly. Even if inputValue matches the regex expression, the text field appears red.
         if (scoreType === "military") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, military: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, military: false});
                 militaryInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, military: false});
+                setValidInput({...validInput, military: true});
             }
             
         } else if (scoreType === "treasury") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, treasury: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, treasury: false});
                 treasuryInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, treasury: false});
+                setValidInput({...validInput, treasury: true});
             }
         } else if (scoreType === "wonder") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, wonder: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, wonder: false});
                 wonderInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, wonder: false});
-                // wonderInput = gameScoresInput.wonder;
+                setValidInput({...validInput, wonder: true});
             }
         } else if (scoreType === "civilian") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, civilian: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, civilian: false});
                 civilianInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, civilian: false});
-                // civilianInput = gameScoresInput.civilian;
+                setValidInput({...validInput, civilian: true});
             }
         } else if (scoreType === "scientific") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, scientific: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, scientific: false});
                 scientificInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, scientific: false});
-                // scientificInput = gameScoresInput.scientific;
+                setValidInput({...validInput, scientific: true});
             }
         } else if (scoreType === "commercial") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, commercial: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, commercial: false});
                 commercialInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, commercial: false});
-                // commercialInput = gameScoresInput.commercial;
+                setValidInput({...validInput, commercial: true});
             }
         } else if (scoreType === "guild") {
-            if (inputValue.match("^[0-9]*$")) {
-                setValidInput({...validInput, guild: true});
+            if (inputValue.match(regexExpression)) {
+                setValidInput({...validInput, guild: false});
                 guildInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, guild: false});
-                // guildInput = gameScoresInput.guild;
+                setValidInput({...validInput, guild: true});
             }
         }
 
@@ -302,7 +291,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["military"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="militaryPoints"
@@ -338,7 +327,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["treasury"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="treasuryPoints"
@@ -374,7 +363,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["wonder"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="wonderPoints"
@@ -410,7 +399,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["civilian"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="civilianStructuresPoints"
@@ -446,7 +435,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["scientific"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="scientificPoints"
@@ -482,7 +471,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["commercial"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="commercialPoints"
@@ -518,7 +507,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             <TextField
                                 autoFocus
                                 error={validInput["guild"]}
-                                helperText="Format: Only numeric values 0-9"
+                                helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
                                 id="guildPoints"
