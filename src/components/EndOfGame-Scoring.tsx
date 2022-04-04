@@ -201,7 +201,6 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
         });
     }
 
-     // TODO: Fix code so the scores only get added if invalidInput for each category is true
     const addGameScore = (scoreType: string) => {
 
         if (scoreType === "militaryPoints") {
@@ -278,12 +277,14 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
     
     const endGame = () => {
         if (allScoresEntered === true) {
+            const totalScore = gameScores.reduce((partialSum, a) => partialSum + a, 0);
+
              // Add the new game result to the app data
             addGameResult({
                 // TODO: Work on winner property so they are not hard-coded
                 start: currentGame.startTime,
                 end: new Date().toISOString(),
-                winner: "Me",
+                winner: "",
                 players: currentGame.players,
                 wonder: currentGame.wonder,
                 points: {
@@ -294,11 +295,12 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                     scientific: gameScores[4],
                     commercial: gameScores[5],
                     guild: gameScores[6]
-                }
+                },
+                totalScore: totalScore
             });
 
             // Navigate to the Home page
-            nav("/");
+            nav("/game-result");
         } else {
             return;
         }

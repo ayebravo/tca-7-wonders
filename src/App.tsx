@@ -5,6 +5,7 @@ import SetupGame from "./components/Setup-game";
 import FunFacts from "./components/Fun-facts";
 import EndOfGameScoring from "./components/EndOfGame-Scoring";
 import './App.css';
+import GameResult from './components/GameResult';
 
 
 export interface player {
@@ -29,7 +30,8 @@ export interface gameResult {
     scientific: number,
     commercial: number,
     guild: number
-  }
+  },
+  totalScore: number
 }
 
 export interface currentGame {
@@ -61,13 +63,15 @@ const playerThree: player = {
 const gameOne: gameResult = {
   end: "2022-01-03", 
   winner: "Me",
-  players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}]
+  players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}],
+  totalScore: 20
 }
 
 const gameTwo: gameResult = {
   end: "2022-01-16",
   winner: "Silvia",
-  players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}]
+  players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}],
+  totalScore: 10
 };
 
 const wonders: wonder[] = [
@@ -99,6 +103,7 @@ const App: React.FC = () => {
   const [playersList, setPlayersList] = useState(players);
   const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0].uniqueID]);
   const [wonderValue, setWonderValue] = useState(wonders[0].uniqueID);
+  const [gameResultSelection, setGameResultSelection] = useState("");
 
   const addGameResult = (singleGameResult: gameResult) => {
     setResults([
@@ -137,6 +142,8 @@ const App: React.FC = () => {
         <Route path="fun-facts" element={<FunFacts />} />
         <Route path="end-of-game-scoring" 
                element={<EndOfGameScoring addGameResult={ addGameResult } currentGame={currentGame}/>} />
+        <Route path="game-result" 
+               element={<GameResult gameResults={ results } gameResultSelection={gameResultSelection} addGameResult={ addGameResult } setGameResultSelection={setGameResultSelection} />} />
       </Routes>
     </div>
   );

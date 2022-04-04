@@ -11,21 +11,21 @@ import '../styles/Games-history.css';
 import { gameResult, player } from '../App';
 
 interface GamesHistoryProps {
-    gamesData: gameResult[];
+    gamesData: gameResult[]
 }
 
 const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
 
-    const getGameResult = (game: gameResult) => {
-        return game.winner === "Me" ? "W" : "L"; 
-    }
+    // const getGameResult = (game: gameResult) => {
+    //     return game.winner === "Me" ? "W" : "L"; 
+    // }
 
     const createData = (end: string, players: player[], gameResult: string) => {
         const playersFormattedList = players.map(player => player.name).join(", ");
         return { end, playersFormattedList, gameResult };
     };
 
-    const rows = gamesData.map((game:gameResult) => createData(game.end, game.players, getGameResult(game)));
+    const rows = gamesData.map((game:gameResult) => createData(game.end, game.players, game.winner));
     const sortedRows = [...rows].sort((a, b) => a.end.localeCompare(b.end)).reverse();
 
     return (
