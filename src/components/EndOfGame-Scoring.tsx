@@ -11,15 +11,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Checkbox from '@mui/material/Checkbox';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { currentGame, gameResult } from '../App';
+import { currentGame } from '../App';
 import '../styles/GameScoringPage.css';
 
 interface NewGameProps {
-    addGameResult: (result: gameResult) => void,
-    currentGame: currentGame
+    currentGame: currentGame,
+    gameScores: number[],
+    setGameScores:(score: any) => void
 }
 
-const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }) => {
+const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, setGameScores }) => {
     const nav = useNavigate();
 
     // Popover section
@@ -67,7 +68,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
         commercial: 0,
         guild: 0
     });
-    const [gameScores, setGameScores] = useState<number[]>([]);
+    // const [gameScores, setGameScores] = useState<number[]>([]);
     const [openMilitaryPointsModal, setOpenMilitaryPointsModal] = useState(false);
     const [openTreasuryPointsModal, setOpenTreasuryPointsModal] = useState(false);
     const [openWondersPointsModal, setOpenWondersPointsModal] = useState(false);
@@ -275,31 +276,9 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
         }
     }
     
-    const endGame = () => {
+    const getGameResult = () => {
         if (allScoresEntered === true) {
-            const totalScore = gameScores.reduce((partialSum, a) => partialSum + a, 0);
-
-             // Add the new game result to the app data
-            addGameResult({
-                // TODO: Work on winner property so they are not hard-coded
-                start: currentGame.startTime,
-                end: new Date().toISOString(),
-                winner: "",
-                players: currentGame.players,
-                wonder: currentGame.wonder,
-                points: {
-                    military: gameScores[0],
-                    treasury: gameScores[1],
-                    wonder: gameScores[2],
-                    civilian: gameScores[3],
-                    scientific: gameScores[4],
-                    commercial: gameScores[5],
-                    guild: gameScores[6]
-                },
-                totalScore: totalScore
-            });
-
-            // Navigate to the Home page
+            // Navigate to the Game Result page
             nav("/game-result");
         } else {
             return;
@@ -573,7 +552,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
             >End Game</Button>
             {
                displayAlertMessage === false 
-                ? endGame()
+                ? getGameResult()
                 :  anchorEl !== null 
                     ?
                         <Popover

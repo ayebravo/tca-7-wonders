@@ -6,42 +6,65 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Logo from '../assets/Logo.png';
-import { gameResult } from '../App';
+import { currentGame, gameResult } from '../App';
 import '../styles/GameResult.css';
 
 interface GameResultProps {
     gameResults: gameResult[],
     addGameResult: (result: gameResult) => void,
-    setGameResultSelection: (result: string) => void,
-    gameResultSelection: string
+    gameScores: number[],
+    currentGame: currentGame
 }
 
-const GameResult: React.FC<GameResultProps> = ({ gameResults, setGameResultSelection, addGameResult, gameResultSelection }) => {
+const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gameScores, currentGame }) => {
     const nav = useNavigate();
     const [latestGameTotalScore, setLatestGameTotalScore] = useState(0);
+    const [gameResultSelection, setGameResultSelection] = useState("");
 
     useEffect(() => {
         if (gameResults && gameResults.length > 0 && gameResults[gameResults.length - 1].totalScore) {
-            const totalScore = gameResults[gameResults.length - 1].totalScore !== undefined ? gameResults[gameResults.length - 1].totalScore : latestGameTotalScore;
+            const totalScore = gameResults[gameResults.length - 1].totalScore !== undefined ? gameResults[gameResults.length - 1].totalScore : "N/A";
             setLatestGameTotalScore(totalScore);
         }
     }, [gameResults]);
 
-    // TODO: Fix that adding the game's winner based on user's button clicked is not working
+    useEffect(() => {
+        if (gameResultSelection !== "") {
+            endGame();
+        }
+    }, [gameResultSelection]);
+
     const addWonGame = () => {
         setGameResultSelection("W");
-        // gameResults[gameResults.length - 1].winner = gameResultSelection;
-        nav("/");
     }
 
     const addLostGame = () => {
         setGameResultSelection("L");
-        // gameResults[gameResults.length - 1].winner = gameResultSelection;
+    }
 
-        // addGameResult({
-        //     ...gameResults[gameResults.length - 1],
-        //     winner: gameResultSelection
-        // });
+    const endGame = () => {
+        const totalScore = gameScores.reduce((partialSum, a) => partialSum + a, 0);
+
+            // Add the new game result to the app data
+        addGameResult({
+            start: currentGame.startTime,
+            end: new Date().toISOString(),
+            winner: gameResultSelection,
+            players: currentGame.players,
+            wonder: currentGame.wonder,
+            points: {
+                military: gameScores[0],
+                treasury: gameScores[1],
+                wonder: gameScores[2],
+                civilian: gameScores[3],
+                scientific: gameScores[4],
+                commercial: gameScores[5],
+                guild: gameScores[6]
+            },
+            totalScore: totalScore
+        });
+
+        // Navigate to the home page
         nav("/");
     }
     

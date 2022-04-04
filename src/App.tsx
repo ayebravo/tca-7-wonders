@@ -31,7 +31,7 @@ export interface gameResult {
     commercial: number,
     guild: number
   },
-  totalScore: number
+  totalScore: number | any
 }
 
 export interface currentGame {
@@ -103,7 +103,7 @@ const App: React.FC = () => {
   const [playersList, setPlayersList] = useState(players);
   const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0].uniqueID]);
   const [wonderValue, setWonderValue] = useState(wonders[0].uniqueID);
-  const [gameResultSelection, setGameResultSelection] = useState("");
+  const [gameScores, setGameScores] = useState<number[]>([]);
 
   const addGameResult = (singleGameResult: gameResult) => {
     setResults([
@@ -111,6 +111,7 @@ const App: React.FC = () => {
       , singleGameResult
     ]);
 
+    setGameScores([]); // Resetting gameScores before starting a new game
     setCheckedPlayersList([playersList[0].uniqueID]); // Resetting the checked players for a new game
   };
 
@@ -141,9 +142,17 @@ const App: React.FC = () => {
               } />
         <Route path="fun-facts" element={<FunFacts />} />
         <Route path="end-of-game-scoring" 
-               element={<EndOfGameScoring addGameResult={ addGameResult } currentGame={currentGame}/>} />
+               element={<EndOfGameScoring 
+                  currentGame={currentGame} 
+                  gameScores={gameScores} 
+                  setGameScores={setGameScores} />} />
         <Route path="game-result" 
-               element={<GameResult gameResults={ results } gameResultSelection={gameResultSelection} addGameResult={ addGameResult } setGameResultSelection={setGameResultSelection} />} />
+               element={<GameResult 
+                  gameResults={ results } 
+                  gameScores={gameScores}
+                  currentGame={currentGame}
+                  addGameResult={ addGameResult }
+          />} />
       </Routes>
     </div>
   );
