@@ -37,7 +37,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
     const idPopover = openPopover ? 'simple-popover' : undefined;
     // End popover section
 
-    const [validInput, setValidInput] = useState({
+    const [invalidInput, setInvalidInput] = useState({
         military: true,
         treasury: true,
         wonder: true,
@@ -128,53 +128,53 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
         
         if (scoreType === "military") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, military: false});
+                setInvalidInput({...invalidInput, military: false});
                 militaryInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, military: true});
+                setInvalidInput({...invalidInput, military: true});
             }
             
         } else if (scoreType === "treasury") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, treasury: false});
+                setInvalidInput({...invalidInput, treasury: false});
                 treasuryInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, treasury: true});
+                setInvalidInput({...invalidInput, treasury: true});
             }
         } else if (scoreType === "wonder") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, wonder: false});
+                setInvalidInput({...invalidInput, wonder: false});
                 wonderInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, wonder: true});
+                setInvalidInput({...invalidInput, wonder: true});
             }
         } else if (scoreType === "civilian") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, civilian: false});
+                setInvalidInput({...invalidInput, civilian: false});
                 civilianInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, civilian: true});
+                setInvalidInput({...invalidInput, civilian: true});
             }
         } else if (scoreType === "scientific") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, scientific: false});
+                setInvalidInput({...invalidInput, scientific: false});
                 scientificInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, scientific: true});
+                setInvalidInput({...invalidInput, scientific: true});
             }
         } else if (scoreType === "commercial") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, commercial: false});
+                setInvalidInput({...invalidInput, commercial: false});
                 commercialInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, commercial: true});
+                setInvalidInput({...invalidInput, commercial: true});
             }
         } else if (scoreType === "guild") {
             if (inputValue.match(regexExpression)) {
-                setValidInput({...validInput, guild: false});
+                setInvalidInput({...invalidInput, guild: false});
                 guildInput = parseInt(inputValue);
             } else {
-                setValidInput({...validInput, guild: true});
+                setInvalidInput({...invalidInput, guild: true});
             }
         }
 
@@ -201,30 +201,64 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
         });
     }
 
-     // TODO: Fix code so the scores only get added if validInput for each category is true
+     // TODO: Fix code so the scores only get added if invalidInput for each category is true
     const addGameScore = (scoreType: string) => {
 
         if (scoreType === "militaryPoints") {
-            gameScoresArray.push(gameScoresInput.military);
-            handleCloseModal("militaryPoints");
+            if (invalidInput["military"] === false) {
+                gameScoresArray.push(gameScoresInput.military);
+                handleCloseModal("militaryPoints");
+            } else {
+                handleCloseModal("militaryPoints");
+            }
+            
         } else if (scoreType === "treasuryPoints") {
-            gameScoresArray.push(gameScoresInput.treasury);
-            handleCloseModal("treasuryPoints");
+            if (invalidInput["treasury"] === false) {
+                gameScoresArray.push(gameScoresInput.treasury);
+                handleCloseModal("treasuryPoints");
+            } else {
+                handleCloseModal("treasuryPoints");
+            }
+
         } else if (scoreType === "wonderPoints") {
-            gameScoresArray.push(gameScoresInput.wonder);
-            handleCloseModal("wonderPoints");
+            if (invalidInput["wonder"] === false) {
+                gameScoresArray.push(gameScoresInput.wonder);
+                handleCloseModal("wonderPoints");
+            } else {
+                handleCloseModal("wonderPoints");
+            }
+
         } else if (scoreType === "civilianStructuresPoints") {
-            gameScoresArray.push(gameScoresInput.civilian);
-            handleCloseModal("civilianStructuresPoints");
+            if (invalidInput["civilian"] === false) {
+                gameScoresArray.push(gameScoresInput.civilian);
+                handleCloseModal("civilianStructuresPoints");
+            } else {
+                handleCloseModal("civilianStructuresPoints");
+            }
+
         } else if (scoreType === "scientificPoints") {
-            gameScoresArray.push(gameScoresInput.scientific);
-            handleCloseModal("scientificPoints");
+            if (invalidInput["scientific"] === false) {
+                gameScoresArray.push(gameScoresInput.scientific);
+                handleCloseModal("scientificPoints");
+            } else {
+                handleCloseModal("scientificPoints");
+            }
+
         } else if (scoreType === "commercialPoints") {
-            gameScoresArray.push(gameScoresInput.commercial);
-            handleCloseModal("commercialPoints");
+            if (invalidInput["commercial"] === false) {
+                gameScoresArray.push(gameScoresInput.commercial);
+                handleCloseModal("commercialPoints");
+            } else {
+                handleCloseModal("commercialPoints");
+            }
+
         } else if (scoreType === "guildPoints") {
-            gameScoresArray.push(gameScoresInput.guild);
-            handleCloseModal("guildPoints");
+            if (invalidInput["commercial"] === false) {
+                gameScoresArray.push(gameScoresInput.guild);
+                handleCloseModal("guildPoints");
+            } else {
+                handleCloseModal("guildPoints");
+            }
         }
 
         setGameScores([...gameScores, ...gameScoresArray]);
@@ -241,7 +275,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
             handleClickPopover(e);
         }
     }
-
+    
     const endGame = () => {
         if (allScoresEntered === true) {
              // Add the new game result to the app data
@@ -290,7 +324,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["military"]}
+                                error={invalidInput["military"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -304,7 +338,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("militaryPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("militaryPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["military"] === false) addGameScore("militaryPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
@@ -326,7 +360,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["treasury"]}
+                                error={invalidInput["treasury"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -340,7 +374,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("treasuryPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("treasuryPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["treasury"] === false) addGameScore("treasuryPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
@@ -362,7 +396,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["wonder"]}
+                                error={invalidInput["wonder"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -376,7 +410,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("wonderPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("wonderPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["wonder"] === false) addGameScore("wonderPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
@@ -398,7 +432,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["civilian"]}
+                                error={invalidInput["civilian"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -412,7 +446,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("civilianStructuresPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("civilianStructuresPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["civilian"] === false) addGameScore("civilianStructuresPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
@@ -434,7 +468,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["scientific"]}
+                                error={invalidInput["scientific"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -448,7 +482,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("scientificPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("scientificPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["scientific"] === false) addGameScore("scientificPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
@@ -470,7 +504,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["commercial"]}
+                                error={invalidInput["commercial"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -484,7 +518,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("commercialPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("commercialPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["commercial"] === false) addGameScore("commercialPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
@@ -506,7 +540,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                             </DialogContentText>
                             <TextField
                                 autoFocus
-                                error={validInput["guild"]}
+                                error={invalidInput["guild"]}
                                 helperText="Format: Only numeric values 0-9 and at least one character"
                                 autoComplete='off'
                                 margin="dense"
@@ -520,7 +554,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ addGameResult, currentGame }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => handleCloseModal("guildPoints")}>Cancel</Button>
-                            <Button onClick={() => addGameScore("guildPoints")}>Add points</Button>
+                            <Button onClick={() => { if(invalidInput["guild"] === false) addGameScore("guildPoints")}}>Add points</Button>
                         </DialogActions>
                     </Dialog>
                     <Checkbox
