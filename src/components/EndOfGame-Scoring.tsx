@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -11,7 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Checkbox from '@mui/material/Checkbox';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { currentGame } from '../App';
+import { currentGame, gameResult } from '../App';
 import '../styles/GameScoringPage.css';
 
 interface NewGameProps {
@@ -275,16 +275,12 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
             handleClickPopover(e);
         }
     }
-    
-    const getGameResult = () => {
-        if (allScoresEntered === true) {
-            // Navigate to the Game Result page
+
+    useEffect(() => {
+        if (displayAlertMessage === false && allScoresEntered === true) {
             nav("/game-result");
-        } else {
-            return;
-        }
-       
-    }
+        };
+    }, [displayAlertMessage, allScoresEntered])
 
     // TODO: Add Civilian Structures, scientific, commercial, and guild points instructions in the DialogContentText
 
@@ -550,28 +546,25 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                validateEndingGame(e);
             }}
             >End Game</Button>
-            {
-               displayAlertMessage === false 
-                ? getGameResult()
-                :  anchorEl !== null 
-                    ?
-                        <Popover
-                            id={idPopover}
-                            open={openPopover}
-                            anchorEl={anchorEl}
-                            onClose={handleClosePopover}
-                            anchorOrigin={{
-                                vertical: 'center',
-                                horizontal: 'center',
-                            }}
-                            transformOrigin={{
-                                vertical: 'center',
-                                horizontal: 'center',
-                            }}
-                    >
-                        <Typography sx={{ p: 2 }}>Please enter all the scores</Typography>
-                    </Popover>
-                    : <></>
+            { 
+                anchorEl !== null ?
+                    <Popover
+                        id={idPopover}
+                        open={openPopover}
+                        anchorEl={anchorEl}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                            vertical: 'center',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'center',
+                            horizontal: 'center',
+                        }}
+                >
+                    <Typography sx={{ p: 2 }}>Please enter all the scores</Typography>
+                </Popover>
+                : <></>
            }
         </div>
     );
