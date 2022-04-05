@@ -69,9 +69,9 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
             <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
             <h1>Game Result</h1>
             
-            <Card sx={{ minWidth: 200, marginBottom: "2em" }}>
+            <Card sx={{ minWidth: "10em", margin: "0 1em 2em" }}>
                 <CardContent>
-                    <Typography sx={{ fontSize: 16 }} color="text.secondary" gutterBottom>
+                    <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
                         Your Total Score:
                     </Typography>
                     <Typography variant="h5" component="div">
@@ -81,10 +81,9 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
             </Card>
 
             <div className='selectGameResultContainer'>
-                {/* TODO: Fix that when I add the Typography element, it makes my card element get wider */}
-                {/* <Typography variant="subtitle1">
+                <Typography style={{ maxWidth: "18.5em", marginBottom: "1em", fontWeight: 600 }} variant="subtitle1">
                     Compare your total score with the other players' score. How did you do?
-                </Typography> */}
+                </Typography>
 
                 <ButtonGroup className='GameResultButtons' variant="contained" aria-label="outlined primary button group" size='large'>
                     <Button onClick={ addWonGame }>I Won</Button>
