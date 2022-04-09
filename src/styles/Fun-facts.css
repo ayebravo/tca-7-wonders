@@ -3,3 +3,19 @@
 	cursor: pointer;
 	padding-top: 1em;
 }
+
+.card {
+	padding-bottom: 0.5em;
+	margin-bottom: 1.5em;
+	width: 100%;
+}
+
+.cardContent {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5em 1em 0.2em !important;
+}
+
+.css-46bh2p-MuiCardContent-root .css-ahj2mt-MuiTypography-root {
+	font-size: 1.1rem !important;
+}
