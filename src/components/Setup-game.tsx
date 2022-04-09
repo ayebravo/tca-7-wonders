@@ -36,7 +36,9 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
         alert("The entered name already exists");
     }
 
-    const addPlayerToList = () => {
+    const addPlayerToList = (e: any) => {
+        e.preventDefault();
+
         const newPlayerInputFormatted = (newPlayerInput.charAt(0).toUpperCase() + newPlayerInput.slice(1)).trim();
         // Check if the input exist as a name in the players object
         const isNameInTheList = players.map(player => player.name).includes(newPlayerInputFormatted);
@@ -98,7 +100,7 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
                         value={newPlayerInput}
                         onChange={handleInputChange}
                     />
-                    <Button variant="outlined" type='submit' size="medium" color="success" onClick={ addPlayerToList }>
+                    <Button variant="outlined" type='submit' size="medium" color="success" onClick={ (e) => addPlayerToList(e) }>
                         Add player
                     </Button>
                 </div>

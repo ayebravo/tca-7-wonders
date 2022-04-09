@@ -40,18 +40,24 @@ const GamesHistory: React.FC<GamesHistoryProps> = ({ gamesData }) => {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {sortedRows.map((row: any) => (
-                        <TableRow
-                            key={`row_${row.end}`}
-                            sx={{ '&:last-child td, &:last-child th': { uniqueID: 0 } }}
-                        >
-                        <TableCell key={`cell_${row.end}`} component="th" scope="row">
-                            {format(new Date(row.end), 'MM/dd/yyyy')}
-                        </TableCell>
-                        <TableCell align="left">{row.playersFormattedList}</TableCell>
-                        <TableCell align="center">{row.gameResult}</TableCell>
-                        </TableRow>
-                    ))}
+                        { 
+                            sortedRows?.length > 0 ?
+                                sortedRows.map((row: any) => (
+                                    <TableRow
+                                        key={`row_${row.end}`}
+                                        sx={{ '&:last-child td, &:last-child th': { uniqueID: 0 } }}
+                                    >
+                                    <TableCell key={`cell_${row.end}`} component="th" scope="row">
+                                        {format(new Date(row.end), 'MM/dd/yyyy')}
+                                    </TableCell>
+                                    <TableCell align="left">{row.playersFormattedList}</TableCell>
+                                    <TableCell align="center">{row.gameResult}</TableCell>
+                                    </TableRow>
+                                ))
+                            : <TableRow>
+                                <TableCell>No games to display</TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

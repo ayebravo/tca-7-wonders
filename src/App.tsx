@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import localforage from 'localforage';
 import Home from "./components/Home";
 import SetupGame from "./components/Setup-game";
 import FunFacts from "./components/Fun-facts";
 import EndOfGameScoring from "./components/EndOfGame-Scoring";
-import './App.css';
 import GameResult from './components/GameResult';
+import './App.css';
 
 
 export interface player {
@@ -81,7 +82,7 @@ const wonders: wonder[] = [
   }
 ]
 
-const gameResults: gameResult[] = [
+const gameResultsBad: gameResult[] = [
   gameOne,
   gameTwo
 ];
@@ -94,22 +95,44 @@ const players: player[] = [
 
 const App: React.FC = () => {
 
+  const loadGameResults = async () => {
+    try {
+      const results = await localforage.getItem<gameResult[]>("gameResults");
+      setResults(results ?? []);
+    }
+
+    catch(err) {
+      console.error(err);
+      setResults([]);
+    }
+  };
+
+  useEffect(
+    () => {
+      loadGameResults();
+    }, []
+  );
+
   const [currentGame, setCurrentGame] = useState<currentGame>({
     startTime: "",
     players: [],
     wonder: ""
   });
-  const [results, setResults] = useState(gameResults);
+  const [results, setResults] = useState<gameResult[]>([]);
   const [playersList, setPlayersList] = useState(players);
   const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0].uniqueID]);
   const [wonderValue, setWonderValue] = useState(wonders[0].uniqueID);
   const [gameScores, setGameScores] = useState<number[]>([]);
 
-  const addGameResult = (singleGameResult: gameResult) => {
-    setResults([
+  const addGameResult = async (singleGameResult: gameResult) => {
+    const updatedResults = [
       ...results 
       , singleGameResult
-    ]);
+    ];
+
+    const savedResults = await localforage.setItem('gameResults', updatedResults);
+
+    setResults(savedResults);
 
     setGameScores([]); // Resetting gameScores before starting a new game
     setCheckedPlayersList([playersList[0].uniqueID]); // Resetting the checked players for a new game
