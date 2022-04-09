@@ -16,14 +16,13 @@ export interface player {
 
 export interface gameResult {
   // TODO: Add function to calculate duration
-  // TODO: Make all properties required once I delete hard-coded games
   gameResult: string,     
   players: player[]
   start?: string,
   end: string,
   duration?: string
-  wonder?: string,
-  points?: {
+  wonder: string,
+  points: {
     military: number,
     treasury: number,
     wonder: number,
@@ -51,30 +50,6 @@ const playerOne: player = {
   uniqueID: "1"
 }
 
-const playerTwo: player = {
-  name: "Sam",
-  uniqueID: "2"
-}
-
-const playerThree: player = {
-  name: "Santi",
-  uniqueID: "3"
-}
-
-const gameOne: gameResult = {
-  end: "2022-01-03", 
-  gameResult: "W",
-  players: [{name: "Me", uniqueID: "1"}, {name: "Sam", uniqueID: "2"}],
-  totalScore: 20
-}
-
-const gameTwo: gameResult = {
-  end: "2022-01-16",
-  gameResult: "L",
-  players: [{name: "Me", uniqueID: "1"}, {name: "Silvia", uniqueID: "2"}, {name: "Fermin", uniqueID: "3"}],
-  totalScore: 10
-};
-
 const wonders: wonder[] = [
   {
     name: "Olimpia",
@@ -82,15 +57,8 @@ const wonders: wonder[] = [
   }
 ]
 
-const gameResultsBad: gameResult[] = [
-  gameOne,
-  gameTwo
-];
-
 const players: player[] = [
-  playerOne,
-  playerTwo,
-  playerThree
+  playerOne
 ]
 
 const App: React.FC = () => {
