@@ -29,11 +29,11 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
     const nav = useNavigate();
 
     // TODO: Display inline error message if user exists instead of an alert
-    const displayNameExistsErrorMessage = () => {
+    const displayErrorMessage = (message: string) => {
         // <Stack sx={{ width: '100%' }} spacing={2}>
         //     <Alert severity="error">The entered name already exists</Alert>
         // </Stack>
-        alert("The entered name already exists");
+        alert(message);
     }
 
     const addPlayerToList = (e: any) => {
@@ -44,13 +44,15 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
         const isNameInTheList = players.map(player => player.name).includes(newPlayerInputFormatted);
         const newUniqueID = uuidv4();
 
-        if (isNameInTheList === false) {
+        if (isNameInTheList === true) {
+            displayErrorMessage("The entered name already exists");
+        } else if (newPlayerInputFormatted === "") {
+            displayErrorMessage("Please enter a non-empty input");
+        } else {
             addPlayer({
                 name: newPlayerInputFormatted,
                 uniqueID: newUniqueID
             });
-        } else {
-            displayNameExistsErrorMessage()
         }
 
         setNewPlayerInput(""); // Reset new player's input to reset the text field
