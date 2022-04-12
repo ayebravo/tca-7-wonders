@@ -34,6 +34,11 @@ export interface gameResult {
   totalScore: number
 }
 
+export interface stats {
+  wins: number,
+  loses: number
+}
+
 export interface currentGame {
   players: player[],
   startTime: string,
@@ -91,7 +96,11 @@ const App: React.FC = () => {
   const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0].uniqueID]);
   const [wonderValue, setWonderValue] = useState(wonders[0].uniqueID);
   const [gameScores, setGameScores] = useState<number[]>([]);
-
+  const [gamesStats, setGamesStats] = useState<stats>({
+    wins: 0,
+    loses: 0
+  });
+ 
   const addGameResult = async (singleGameResult: gameResult) => {
     const updatedResults = [
       ...results 
@@ -131,7 +140,8 @@ const App: React.FC = () => {
                   setWonderValue={setWonderValue}
                   />
               } />
-        <Route path="fun-facts" element={<FunFacts />} />
+        <Route path="fun-facts" 
+               element={<FunFacts gamesStats={gamesStats} setGamesStats={setGamesStats} gameResults={ results }/>} />
         <Route path="end-of-game-scoring" 
                element={<EndOfGameScoring 
                   currentGame={currentGame} 
