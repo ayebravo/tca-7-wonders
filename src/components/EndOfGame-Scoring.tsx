@@ -287,7 +287,8 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
     return (
         <div className="endOfGameContainer"> 
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
-           <h1>Enter Game Points</h1>
+           <h1 style={{textAlign: "left", marginBottom: 0}}>Game Points</h1>
+           <p>Add the points at the end of Stage 3.</p>
            <div className='endOfGameScoringSection'>
                 <div className='militaryPointsContainer'>
                     <Button variant="contained" onClick={() => handleClickOpenModal("militaryPoints")}>
@@ -562,7 +563,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             horizontal: 'center',
                         }}
                 >
-                    <Typography sx={{ p: 2 }}>Please enter all the scores</Typography>
+                    <Typography sx={{ p: 2 }}>Please add points for all the categories</Typography>
                 </Popover>
                 : <></>
            }

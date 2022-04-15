@@ -82,8 +82,9 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
     return (
         <div className='setupGameContainer'>
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
+            <h4 style={{paddingLeft: "1em", paddingRight: "1em"}}>Select players and wonder for the game:</h4>
             <div className='selectPlayersContainer'>
-                <Typography  variant="h6">Select Players: </Typography>
+                <Typography  variant="h6">Players: </Typography>
                 <PlayersList playersData={ players } checkedPlayersList={checkedPlayersList} setCheckedPlayersList={setCheckedPlayersList} />
             </div>
             <Box
@@ -108,11 +109,10 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
                 </div>
             </Box>
             <div className='selectWonderContainer'>
-                <Typography  variant="h6">Select Wonder (board): </Typography>
+                <Typography  variant="h6">Wonder (board): </Typography>
                 <WonderOptions wondersData={wonders} wonderValue={wonderValue} setWonderValue={setWonderValue}/>
             </div>
            <Button variant="contained" size="large" color="success" onClick={startGame}>Start Game</Button>
-           {/* When play game button is clicked, I want to get the start time timestamp for the current game */}
         </div>
     );
 };

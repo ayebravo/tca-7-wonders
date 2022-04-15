@@ -12,7 +12,8 @@
 .endOfGameScoringSection {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	align-items: flex-start;
+	padding-top: 1em;
 }
 
 .wondersPointsContainer,

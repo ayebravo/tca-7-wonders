@@ -63,8 +63,16 @@ const playerOne: player = {
 const wonders: wonder[] = [
   {
     name: "Olimpia",
-    uniqueID: "1"
-  }
+    uniqueID: "1B"
+  },
+  {
+    name: "Alexandria",
+    uniqueID: "2B"
+  },
+  {
+    name: "Babylon",
+    uniqueID: "3B"
+  },
 ]
 
 const players: player[] = [
@@ -133,6 +141,7 @@ const App: React.FC = () => {
 
     setGameScores([]); // Resetting gameScores before starting a new game
     setCheckedPlayersList([playersList[0].uniqueID]); // Resetting the checked players for a new game
+    setWonderValue(wonders[0].uniqueID); // Resetting the wonder value, so the first one appears checked by default on a new game
   };
 
   const addPlayer = (newPlayer: player) => {
