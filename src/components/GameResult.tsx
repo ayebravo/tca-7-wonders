@@ -45,6 +45,7 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
         addGameResult({
             start: currentGame.startTime,
             end: new Date().toISOString(),
+            duration: 0,
             gameResult: gameResultSelection,
             players: currentGame.players,
             wonder: currentGame.wonder,

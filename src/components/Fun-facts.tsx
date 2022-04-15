@@ -49,7 +49,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                 Wins %
             </Typography>
             <Typography variant="body1" component="div">
-                #
+                {gamesStats.winsPercentage.toFixed(2)}
             </Typography>
           </CardContent>
           <CardContent className='cardContent'>
@@ -57,7 +57,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                 Loses %
             </Typography>
             <Typography variant="body1" component="div">
-                #
+                {gamesStats.losesPercentage.toFixed(2)}
             </Typography>
           </CardContent>
         </React.Fragment>
@@ -71,15 +71,15 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Total Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.lastGameTotalScore}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Duration
+                    Duration (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.lastGameDuration.toFixed(2)}
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -87,26 +87,26 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
     
     const cardThree = (
         <React.Fragment>
-            <h2>Cool gamesStats</h2>
+            <h2>Cool Games Stats</h2>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Longest game
+                    Longest game (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.longestGameDuration.toFixed(2)}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Shortest game
+                    Shortest game (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.shortestGameDuration.toFixed(2)}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Average Game Duration
+                    Avg. Game Duration (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
                     #
@@ -180,10 +180,53 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
         </React.Fragment>
     );
 
+    const calculateWinsPercentage = () => (
+        (gameResults.filter(x => x.gameResult === "W").length 
+        / gameResults.length) * 100
+    );
+
+    const calculateLosesPercentage = () => (
+        (gameResults.filter(x => x.gameResult === "L").length 
+        / gameResults.length) * 100
+    );
+
+    const getLongestGameDuration = () => (
+        Math.max(
+            ...gameResults.map(r => r.duration)
+        )
+    );
+
+    const getShortestGameDuration = () => (
+        Math.min(
+            ...gameResults.map(r => r.duration)
+        )
+    );
+
     const getStats = () => {
-        const winsTotal = gameResults.filter(game => game.gameResult === "W").length;
-        const losesTotal = gameResults.filter(game => game.gameResult === "L").length;
-        setGamesStats({...gamesStats, wins: winsTotal, loses: losesTotal});
+        if (gameResults.length > 0) {
+            const winsTotal = gameResults.filter(game => game.gameResult === "W").length;
+            const losesTotal = gameResults.filter(game => game.gameResult === "L").length;
+            const winsPercentage = calculateWinsPercentage();
+            const losesPercentage = calculateLosesPercentage();
+            const longestGameDuration = getLongestGameDuration();
+            const shortestGameDuration = getShortestGameDuration();
+            const lastGameTotalScore = gameResults[gameResults.length - 1].totalScore;
+            const lastGameDuration = gameResults[gameResults.length - 1].duration;
+
+            setGamesStats({...gamesStats, 
+                wins: winsTotal, 
+                loses: losesTotal, 
+                winsPercentage: winsPercentage, 
+                losesPercentage: losesPercentage, 
+                longestGameDuration: longestGameDuration, 
+                shortestGameDuration: shortestGameDuration, 
+                lastGameTotalScore: lastGameTotalScore,
+                lastGameDuration: lastGameDuration
+            });
+        } else {
+            setGamesStats(gamesStats);
+        }
+        
     }
 
     useEffect(() => {
@@ -194,7 +237,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
         <> 
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
            <h1>Fun Facts</h1>
-           <Box sx={{ minWidth: 300 }}>
+           <Box sx={{ minWidth: 350 }}>
                 <Card className='card' variant="outlined">{cardOne}</Card>
                 <Card className='card' variant="outlined">{cardTwo}</Card>
                 <Card className='card' variant="outlined">{cardThree}</Card>
@@ -204,7 +247,3 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
 };
 
 export default FunFacts;
-
-function gamesStats(gamesStats: any) {
-    throw new Error('Function not implemented.');
-}

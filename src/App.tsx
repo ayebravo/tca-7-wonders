@@ -15,12 +15,11 @@ export interface player {
 }
 
 export interface gameResult {
-  // TODO: Add function to calculate duration
   gameResult: string,     
   players: player[]
-  start?: string,
+  start: string,
   end: string,
-  duration?: string
+  duration: number
   wonder: string,
   points: {
     military: number,
@@ -36,7 +35,13 @@ export interface gameResult {
 
 export interface stats {
   wins: number,
-  loses: number
+  loses: number,
+  winsPercentage: number,
+  losesPercentage: number,
+  longestGameDuration: number,
+  shortestGameDuration: number,
+  lastGameTotalScore: number,
+  lastGameDuration: number
 }
 
 export interface currentGame {
@@ -98,10 +103,25 @@ const App: React.FC = () => {
   const [gameScores, setGameScores] = useState<number[]>([]);
   const [gamesStats, setGamesStats] = useState<stats>({
     wins: 0,
-    loses: 0
+    loses: 0,
+    winsPercentage: 0,
+    losesPercentage: 0,
+    longestGameDuration: 0,
+    shortestGameDuration: 0,
+    lastGameTotalScore: 0,
+    lastGameDuration: 0
   });
+
+  const getGameDuration = (game: gameResult) => {
+    const gameStartTime = Date.parse(game.start);
+    const gameEndTime = Date.parse(game.end);
+    const gameDuration = gameEndTime - gameStartTime;
+    return (gameDuration / 1000 / 60); // Game duration in minutes
+  };
  
   const addGameResult = async (singleGameResult: gameResult) => {
+    singleGameResult = {...singleGameResult, duration: getGameDuration(singleGameResult)};
+
     const updatedResults = [
       ...results 
       , singleGameResult
