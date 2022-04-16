@@ -41,7 +41,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                 Quit
             </Typography>
             <Typography variant="body1" component="div">
-                #
+                {gamesStats.quits}
             </Typography>
           </CardContent>
           <CardContent className='cardContent'>
@@ -66,6 +66,14 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
     const cardTwo = (
         <React.Fragment>
             <h3>Latest Game</h3>
+            <CardContent className='cardContent'>
+                <Typography variant="body1" component="div">
+                    Wonder
+                </Typography>
+                <Typography variant="body1" component="div">
+                    {gamesStats.lastGameWonder}
+                </Typography>
+            </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
                     Total Points
@@ -109,7 +117,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Avg. Game Duration (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.avgGameLength.toFixed(2)}
                 </Typography>
             </CardContent>
             <h3 style={{textAlign: "left", paddingLeft: "0.7em", color: "#c86d0f"}}>Most Points in a Game</h3>
@@ -180,48 +188,79 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
         </React.Fragment>
     );
 
-    const calculateWinsPercentage = () => (
-        (gameResults.filter(x => x.gameResult === "W").length 
-        / gameResults.length) * 100
-    );
+    const calculateWinsPercentage = () => {
+        const winGamesTotal = gameResults.filter(x => x.gameResult === "W").length;
+        const totalGamesExceptQuits = gameResults.filter(x => x.gameResult !== "Q").length; // Don't count quits in winning percentage
+        const winningPercentage = (winGamesTotal / totalGamesExceptQuits) * 100;
 
-    const calculateLosesPercentage = () => (
-        (gameResults.filter(x => x.gameResult === "L").length 
-        / gameResults.length) * 100
-    );
+        return winningPercentage;
+    };
+
+    const calculateLosesPercentage = () => {
+        const loseGamesTotal = gameResults.filter(x => x.gameResult === "L").length;
+        const totalGamesExceptQuits = gameResults.filter(x => x.gameResult !== "Q").length; // Don't count quits in losing percentage
+        const losingPercentage = (loseGamesTotal / totalGamesExceptQuits) * 100;
+
+        return losingPercentage;
+    };
 
     const getLongestGameDuration = () => (
         Math.max(
-            ...gameResults.map(r => r.duration)
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in longest game duration
+            .map(r => r.duration)
         )
     );
 
     const getShortestGameDuration = () => (
         Math.min(
-            ...gameResults.map(r => r.duration)
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in in shortest game duration
+            .map(r => r.duration)
         )
     );
 
+    const getAverageGameLength = () => {
+
+        const gamesDuration = gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in avg game lenth.
+            .map(r => r.duration);
+        
+        return gamesDuration.reduce(
+            (acc, r) => acc + r
+            , 0
+        ) / gamesDuration.length
+    };
+
     const getStats = () => {
-        if (gameResults.length > 0) {
+        const gameResultWLCheck = Object.entries(gameResults).filter((key, value) => key[1].gameResult === "W" || key[1].gameResult === "L");
+
+        if (gameResults.length > 0 && gameResultWLCheck.length > 0) {
             const winsTotal = gameResults.filter(game => game.gameResult === "W").length;
             const losesTotal = gameResults.filter(game => game.gameResult === "L").length;
+            const quitGamesTotal = gameResults.filter(game => game.gameResult === "Q").length;
             const winsPercentage = calculateWinsPercentage();
             const losesPercentage = calculateLosesPercentage();
             const longestGameDuration = getLongestGameDuration();
             const shortestGameDuration = getShortestGameDuration();
             const lastGameTotalScore = gameResults[gameResults.length - 1].totalScore;
             const lastGameDuration = gameResults[gameResults.length - 1].duration;
+            const lastGameWonder = gameResults[gameResults.length - 1].wonder;;
+            const avgGameLength = getAverageGameLength();
 
-            setGamesStats({...gamesStats, 
+            setGamesStats({
+                ...gamesStats, 
                 wins: winsTotal, 
-                loses: losesTotal, 
+                loses: losesTotal,
+                quits: quitGamesTotal,
                 winsPercentage: winsPercentage, 
                 losesPercentage: losesPercentage, 
                 longestGameDuration: longestGameDuration, 
                 shortestGameDuration: shortestGameDuration, 
                 lastGameTotalScore: lastGameTotalScore,
-                lastGameDuration: lastGameDuration
+                lastGameDuration: lastGameDuration,
+                avgGameLength: avgGameLength,
+                lastGameWonder: lastGameWonder
             });
         } else {
             setGamesStats(gamesStats);

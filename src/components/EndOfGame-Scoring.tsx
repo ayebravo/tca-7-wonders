@@ -17,10 +17,11 @@ import '../styles/GameScoringPage.css';
 interface NewGameProps {
     currentGame: currentGame,
     gameScores: number[],
-    setGameScores:(score: any) => void
+    setGameScores:(score: any) => void,
+    addGameResult: (result: gameResult) => void,
 }
 
-const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, setGameScores }) => {
+const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, setGameScores, addGameResult }) => {
     const nav = useNavigate();
 
     // Popover section
@@ -68,7 +69,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         commercial: 0,
         guild: 0
     });
-    // const [gameScores, setGameScores] = useState<number[]>([]);
+
     const [openMilitaryPointsModal, setOpenMilitaryPointsModal] = useState(false);
     const [openTreasuryPointsModal, setOpenTreasuryPointsModal] = useState(false);
     const [openWondersPointsModal, setOpenWondersPointsModal] = useState(false);
@@ -274,6 +275,29 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
             setDisplayAlertMessage(true);
             handleClickPopover(e);
         }
+    }
+
+    const quitGame = () => {
+        addGameResult({
+
+            start: currentGame.startTime,
+            end: new Date().toISOString(),
+            duration: 0,
+            gameResult: "Q",
+            players: currentGame.players,
+            wonder: currentGame.wonder,
+            points: {
+                military: gameScores[0],
+                treasury: gameScores[1],
+                wonder: gameScores[2],
+                civilian: gameScores[3],
+                scientific: gameScores[4],
+                commercial: gameScores[5],
+                guild: gameScores[6]
+            },
+            totalScore: 0
+        });
+        nav(-2);
     }
 
     useEffect(() => {
@@ -543,7 +567,9 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                 </div>
 
             </div>
-           <Button variant="contained" size="large" color="success" onClick={ (e) => {
+            <Button sx={{ marginRight: "0.5em" }} variant="outlined" size="large" color="success" onClick={quitGame}
+            >Quit Game</Button>
+           <Button sx={{ marginRight: "2em" }} variant="contained" size="large" color="success" onClick={ (e) => {
                validateEndingGame(e);
             }}
             >End Game</Button>

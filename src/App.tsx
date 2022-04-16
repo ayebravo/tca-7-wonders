@@ -36,12 +36,15 @@ export interface gameResult {
 export interface stats {
   wins: number,
   loses: number,
+  quits: number,
   winsPercentage: number,
   losesPercentage: number,
   longestGameDuration: number,
   shortestGameDuration: number,
   lastGameTotalScore: number,
-  lastGameDuration: number
+  lastGameWonder: string,
+  lastGameDuration: number,
+  avgGameLength: number
 }
 
 export interface currentGame {
@@ -112,12 +115,15 @@ const App: React.FC = () => {
   const [gamesStats, setGamesStats] = useState<stats>({
     wins: 0,
     loses: 0,
+    quits: 0,
     winsPercentage: 0,
     losesPercentage: 0,
     longestGameDuration: 0,
     shortestGameDuration: 0,
     lastGameTotalScore: 0,
-    lastGameDuration: 0
+    lastGameDuration: 0,
+    avgGameLength: 0,
+    lastGameWonder: "N/A"
   });
 
   const getGameDuration = (game: gameResult) => {
@@ -175,7 +181,9 @@ const App: React.FC = () => {
                element={<EndOfGameScoring 
                   currentGame={currentGame} 
                   gameScores={gameScores} 
-                  setGameScores={setGameScores} />} />
+                  setGameScores={setGameScores}
+                  addGameResult={ addGameResult }
+              />} />
         <Route path="game-result" 
                element={<GameResult 
                   gameResults={ results } 
