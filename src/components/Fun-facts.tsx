@@ -234,6 +234,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
 
     const getStats = () => {
         const gameResultWLCheck = Object.entries(gameResults).filter((key, value) => key[1].gameResult === "W" || key[1].gameResult === "L");
+        const gameResultQCheck = Object.entries(gameResults).filter((key, value) => key[1].gameResult === "Q");
 
         if (gameResults.length > 0 && gameResultWLCheck.length > 0) {
             const winsTotal = gameResults.filter(game => game.gameResult === "W").length;
@@ -262,6 +263,9 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                 avgGameLength: avgGameLength,
                 lastGameWonder: lastGameWonder
             });
+        } else if (gameResults.length > 0 && gameResultQCheck.length > 0) {
+            const quitGamesTotal = gameResults.filter(game => game.gameResult === "Q").length;
+            setGamesStats({...gamesStats, quits: quitGamesTotal});
         } else {
             setGamesStats(gamesStats);
         }
