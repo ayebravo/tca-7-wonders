@@ -2,17 +2,24 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Logo from '../assets/Logo.png';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
-import DialogTitle from '@mui/material/DialogTitle';
-import Checkbox from '@mui/material/Checkbox';
 import Popover from '@mui/material/Popover';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import Typography from '@mui/material/Typography';
 import { currentGame, gameResult } from '../App';
 import '../styles/GameScoringPage.css';
+
+type A = keyof gameScoresInput;
+type gameScoresInput = {
+    military: number,
+    treasury: number,
+    wonder: number,
+    civilian: number,
+    scientific: number,
+    commercial: number,
+    guild: number
+};
 
 interface NewGameProps {
     currentGame: currentGame,
@@ -20,6 +27,20 @@ interface NewGameProps {
     setGameScores:(score: any) => void,
     addGameResult: (result: gameResult) => void,
 }
+
+const inputToArray = (inputs: any):number[]  => {
+    let outputArray: number[] = [];
+
+    outputArray.push(inputs.military);
+    outputArray.push(inputs.treasury);
+    outputArray.push(inputs.wonder);
+    outputArray.push(inputs.civilian);
+    outputArray.push(inputs.scientific);
+    outputArray.push(inputs.commercial);
+    outputArray.push(inputs.guild);
+    return outputArray;
+}
+
 
 const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, setGameScores, addGameResult }) => {
     const nav = useNavigate();
@@ -39,18 +60,13 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
     const idPopover = openPopover ? 'simple-popover' : undefined;
     // End popover section
 
+    const handleClick = (e: any) => {
+        if (e && e.target && e.target.select) {
+            e.target.select();
+        };
+    };
+
     const [invalidInput, setInvalidInput] = useState({
-        military: true,
-        treasury: true,
-        wonder: true,
-        civilian: true,
-        scientific: true,
-        commercial: true,
-        guild: true
-    });
-    const [allScoresEntered, setAllScoresEntered] = useState(false);
-    const [displayAlertMessage, setDisplayAlertMessage] = useState(false);
-    const [isInputEntered, setIsInputEntered] = useState({
         military: false,
         treasury: false,
         wonder: false,
@@ -59,8 +75,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         commercial: false,
         guild: false
     });
+    const [allScoresEntered, setAllScoresEntered] = useState(false);
+    const [displayAlertMessage, setDisplayAlertMessage] = useState(false);
+    const [runningTotalPoints, setRunningTotalPoints] = useState(0);
 
-    const [gameScoresInput, setGameScoresInput] = useState({
+    const [gameScoresInput, setGameScoresInput] = useState<gameScoresInput>({
         military: 0,
         treasury: 0,
         wonder: 0,
@@ -70,52 +89,15 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         guild: 0
     });
 
-    const [openMilitaryPointsModal, setOpenMilitaryPointsModal] = useState(false);
-    const [openTreasuryPointsModal, setOpenTreasuryPointsModal] = useState(false);
-    const [openWondersPointsModal, setOpenWondersPointsModal] = useState(false);
-    const [openCivilianStructuresModal, setOpenCivilianStructuresModal] = useState(false);
-    const [openScientificPointsModal, setOpenScientificPointsModal] = useState(false);
-    const [openCommercialPointsModal, setOpenCommercialPointsModal] = useState(false);
-    const [openGuildPointsModal, setOpenGuildPointsModal] = useState(false);
+    useEffect(() => {
+        let gameScoresArray = inputToArray(gameScoresInput);
+        let runningTotalPoints = gameScoresArray.reduce(
+            (acc, r) => acc + r
+            , 0
+        );
 
-    const gameScoresArray: number[] = [];
-
-    const handleClickOpenModal = (modalID: string) => {
-        if (modalID === "militaryPoints") {
-            setOpenMilitaryPointsModal(true)
-        } else if (modalID === "treasuryPoints") {
-            setOpenTreasuryPointsModal(true)
-        } else if (modalID === "wonderPoints") {
-            setOpenWondersPointsModal(true)
-        } else if (modalID === "civilianStructuresPoints") {
-            setOpenCivilianStructuresModal(true)
-        } else if (modalID === "scientificPoints") {
-            setOpenScientificPointsModal(true)
-        } else if (modalID === "commercialPoints") {
-            setOpenCommercialPointsModal(true)
-        } else if (modalID === "guildPoints") {
-            setOpenGuildPointsModal(true)
-        }
-    };
-  
-    const handleCloseModal = (modalID: string) => {
-        if (modalID === "militaryPoints") {
-            setOpenMilitaryPointsModal(false)
-        } else if (modalID === "treasuryPoints") {
-            setOpenTreasuryPointsModal(false)
-        } else if (modalID === "wonderPoints") {
-            setOpenWondersPointsModal(false)
-        } else if (modalID === "civilianStructuresPoints") {
-            setOpenCivilianStructuresModal(false)
-        } else if (modalID === "scientificPoints") {
-            setOpenScientificPointsModal(false)
-        } else if (modalID === "commercialPoints") {
-            setOpenCommercialPointsModal(false)
-        } else if (modalID === "guildPoints") {
-            setOpenGuildPointsModal(false)
-        }
-
-    };
+        setRunningTotalPoints(runningTotalPoints);
+    }, [gameScoresInput]);
 
     const setScores = (inputValue: string, scoreType: string) => {
         const regexExpression = new RegExp("^[0-9]+$");
@@ -129,54 +111,61 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         let guildInput = gameScoresInput.guild;
         
         if (scoreType === "military") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, military: true});
+                militaryInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, military: false});
                 militaryInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, military: true});
             }
             
         } else if (scoreType === "treasury") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, treasury: true});
+                treasuryInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, treasury: false});
                 treasuryInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, treasury: true});
             }
         } else if (scoreType === "wonder") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, wonder: true});
+                wonderInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, wonder: false});
                 wonderInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, wonder: true});
             }
         } else if (scoreType === "civilian") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, civilian: true});
+                civilianInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, civilian: false});
                 civilianInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, civilian: true});
             }
         } else if (scoreType === "scientific") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, scientific: true});
+                scientificInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, scientific: false});
                 scientificInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, scientific: true});
             }
         } else if (scoreType === "commercial") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, commercial: true});
+                commercialInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, commercial: false});
                 commercialInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, commercial: true});
             }
         } else if (scoreType === "guild") {
-            if (inputValue.match(regexExpression)) {
+            if (!inputValue.match(regexExpression)) {
+                setInvalidInput({...invalidInput, guild: true});
+                guildInput = 0;
+            } else {
                 setInvalidInput({...invalidInput, guild: false});
                 guildInput = parseInt(inputValue);
-            } else {
-                setInvalidInput({...invalidInput, guild: true});
             }
         }
 
@@ -188,87 +177,19 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
             scientific: scientificInput,
             commercial: commercialInput,
             guild: guildInput
-        })
-    }
-
-    const handleInputCheckbox = (scoreType: string) => {
-        setIsInputEntered({
-            military: scoreType === "militaryPoints" ? !isInputEntered["military"] : isInputEntered["military"],
-            treasury: scoreType === "treasuryPoints" ? !isInputEntered["treasury"] : isInputEntered["treasury"],
-            wonder: scoreType === "wonderPoints" ? !isInputEntered["wonder"] : isInputEntered["wonder"],
-            civilian: scoreType === "civilianStructuresPoints" ? !isInputEntered["civilian"] : isInputEntered["civilian"],
-            scientific: scoreType === "scientificPoints" ? !isInputEntered["scientific"] : isInputEntered["scientific"],
-            commercial: scoreType === "commercialPoints" ? !isInputEntered["commercial"] : isInputEntered["commercial"],
-            guild: scoreType === "guildPoints" ? !isInputEntered["guild"] : isInputEntered["guild"]
         });
     }
 
-    const addGameScore = (scoreType: string) => {
-
-        if (scoreType === "militaryPoints") {
-            if (invalidInput["military"] === false) {
-                gameScoresArray.push(gameScoresInput.military);
-                handleCloseModal("militaryPoints");
-            } else {
-                handleCloseModal("militaryPoints");
-            }
-            
-        } else if (scoreType === "treasuryPoints") {
-            if (invalidInput["treasury"] === false) {
-                gameScoresArray.push(gameScoresInput.treasury);
-                handleCloseModal("treasuryPoints");
-            } else {
-                handleCloseModal("treasuryPoints");
-            }
-
-        } else if (scoreType === "wonderPoints") {
-            if (invalidInput["wonder"] === false) {
-                gameScoresArray.push(gameScoresInput.wonder);
-                handleCloseModal("wonderPoints");
-            } else {
-                handleCloseModal("wonderPoints");
-            }
-
-        } else if (scoreType === "civilianStructuresPoints") {
-            if (invalidInput["civilian"] === false) {
-                gameScoresArray.push(gameScoresInput.civilian);
-                handleCloseModal("civilianStructuresPoints");
-            } else {
-                handleCloseModal("civilianStructuresPoints");
-            }
-
-        } else if (scoreType === "scientificPoints") {
-            if (invalidInput["scientific"] === false) {
-                gameScoresArray.push(gameScoresInput.scientific);
-                handleCloseModal("scientificPoints");
-            } else {
-                handleCloseModal("scientificPoints");
-            }
-
-        } else if (scoreType === "commercialPoints") {
-            if (invalidInput["commercial"] === false) {
-                gameScoresArray.push(gameScoresInput.commercial);
-                handleCloseModal("commercialPoints");
-            } else {
-                handleCloseModal("commercialPoints");
-            }
-
-        } else if (scoreType === "guildPoints") {
-            if (invalidInput["commercial"] === false) {
-                gameScoresArray.push(gameScoresInput.guild);
-                handleCloseModal("guildPoints");
-            } else {
-                handleCloseModal("guildPoints");
-            }
-        }
-
+    const addGameScore = () => {
+        let gameScoresArray = inputToArray(gameScoresInput);
         setGameScores([...gameScores, ...gameScoresArray]);
-        handleInputCheckbox(scoreType);
     };
 
-    const validateEndingGame = (e: any) => {
-        const scoresEnteredCheck = Object.entries(isInputEntered).filter((key, value) => key[1] === false);
-        if (scoresEnteredCheck.length === 0) {
+    const validateEndingGame = (e: any) => { 
+        const missingScores = Object.entries(invalidInput).filter(element => element[1] === true);
+        
+        if (missingScores.length === 0) {
+            addGameScore();
             setAllScoresEntered(true);
             setDisplayAlertMessage(false);
         } else {
@@ -300,273 +221,266 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         nav(-2);
     }
 
+    const adjustInput = (category: A, adjustmentValue: number) => {
+        let copy = {...gameScoresInput};
+
+        if (copy[category] === 0 && adjustmentValue < 0) {
+            return;
+        }
+
+        copy[category] += adjustmentValue;
+        setGameScoresInput(copy);
+    };
+
     useEffect(() => {
         if (displayAlertMessage === false && allScoresEntered === true) {
             nav("/game-result");
         };
     }, [displayAlertMessage, allScoresEntered])
 
-    // TODO: Add Civilian Structures, scientific, commercial, and guild points instructions in the DialogContentText
+    // TODO: Add more info or help at the top (or a ? icon) with instructions (as dialog or new screen)
+    // TODO: Fix that when I am focusing on an input field and I scroll, it changes the value set for the input and 'activates' the error message
+            // I tried onWheel={event => { event.preventDefault(); }} and onMouseDown={(e) => e.preventDefault()}
 
     return (
         <div className="endOfGameContainer"> 
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
            <h1 style={{textAlign: "left", marginBottom: 0}}>Game Points</h1>
            <p>Add the points at the end of Stage 3.</p>
+           
            <div className='endOfGameScoringSection'>
+                <Typography style={{paddingBottom: "1em", fontWeight: 600}} variant="button" display="block" gutterBottom>
+                    Running Total: {runningTotalPoints}
+                </Typography>
                 <div className='militaryPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("militaryPoints")}>
-                        Add military points
-                    </Button>
-                    <Dialog open={openMilitaryPointsModal} onClose={() => handleCloseModal("militaryPoints")}>
-                        <DialogTitle className='dialogHeading'>Military Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Add the total of military points after counting your positive and negative tokens.
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                error={invalidInput["military"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
-                                autoComplete='off'
-                                margin="dense"
-                                id="militaryPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setScores(e.target.value, "military")}
-                            />
-                            </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("militaryPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["military"] === false) addGameScore("militaryPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["military"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                    <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                        <button 
+                            onClick={
+                                () => adjustInput("military", -1)
+                            } 
+                            className='minusButton'><RemoveIcon /></button>
+                        <TextField
+                            autoFocus
+                            error={invalidInput["military"]}
+                            onClick={handleClick}
+                            autoComplete='off'
+                            margin="dense"
+                            id="militaryPoints"
+                            label="Add Military Points"
+                            value={gameScoresInput["military"]}
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => setScores(e.target.value, "military")}
+                        />
+                        <button 
+                            onClick={
+                                () => adjustInput("military", 1)
+                            } 
+                            className='plusButton'><AddIcon /></button>
+                    </div>
+                    
+                    {
+                        invalidInput["military"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
                 
                 <div className='treasuryPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("treasuryPoints")}>
-                        Add treasury points
-                    </Button>
-                    <Dialog open={openTreasuryPointsModal} onClose={() => handleCloseModal("treasuryPoints")}>
-                        <DialogTitle className='dialogHeading'>Treasury Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                For every 3 coins in your possession at the end of the game, you score 1 victory point. Leftover coins score no points. <br /> Count all your coins and add here the total of <b>Treasury Points</b>.
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                error={invalidInput["treasury"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
-                                autoComplete='off'
-                                margin="dense"
-                                id="treasuryPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setScores(e.target.value, "treasury")}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("treasuryPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["treasury"] === false) addGameScore("treasuryPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["treasury"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                    <button
+                        onClick={
+                            () => adjustInput("treasury", -1)
+                        } 
+                        className='minusButton'><RemoveIcon /></button>
+                        <TextField
+                            onClick={handleClick}
+                            error={invalidInput["treasury"]}
+                            autoComplete='off'
+                            margin="dense"
+                            value={gameScoresInput["treasury"]}
+                            id="treasuryPoints"
+                            label="Add Treasury Points"
+                            type="number"
+                            variant="standard"
+                            onChange={(e) => setScores(e.target.value, "treasury")}
+                        />
+                        <button 
+                            onClick={
+                                () => adjustInput("treasury", 1)
+                            } 
+                            className='plusButton'><AddIcon /></button>
+                    </div>
+                    {
+                        invalidInput["treasury"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
 
                 <div className='wondersPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("wonderPoints")}>
-                        Add wonder points
-                    </Button>
-                    <Dialog open={openWondersPointsModal} onClose={() => handleCloseModal("wonderPoints")}>
-                        <DialogTitle className='dialogHeading'>Stage 3 - Wonder Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Add the total of victory points from all built stages in your wonder.
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                error={invalidInput["wonder"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
-                                autoComplete='off'
-                                margin="dense"
-                                id="wonderPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setScores(e.target.value, "wonder")}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("wonderPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["wonder"] === false) addGameScore("wonderPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["wonder"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                    <button 
+                        onClick={
+                            () => adjustInput("wonder", -1)
+                        } 
+                        className='minusButton'><RemoveIcon /></button>
+                        <TextField
+                            onClick={handleClick}
+                            error={invalidInput["wonder"]}
+                            value={gameScoresInput["wonder"]}
+                            autoComplete='off'
+                            margin="dense"
+                            id="wonderPoints"
+                            label="Add Wonder Points"
+                            type="number"
+                            variant="standard"
+                            onChange={(e) => setScores(e.target.value, "wonder")}
+                        />
+                        <button 
+                            onClick={
+                                () => adjustInput("wonder", 1)
+                            } 
+                            className='plusButton'><AddIcon /></button>
+                    </div>
+                    {
+                        invalidInput["wonder"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
 
                 <div className='civilianStructuresPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("civilianStructuresPoints")}>
-                        Add civilian points
-                    </Button>
-                    <Dialog open={openCivilianStructuresModal} onClose={() => handleCloseModal("civilianStructuresPoints")}>
-                        <DialogTitle className='dialogHeading'>Civilian Structures Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                To be written...
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                error={invalidInput["civilian"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
-                                autoComplete='off'
-                                margin="dense"
-                                id="civilianStructuresPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setScores(e.target.value, "civilian")}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("civilianStructuresPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["civilian"] === false) addGameScore("civilianStructuresPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["civilian"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                    <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                        <button
+                            onClick={
+                                () => adjustInput("civilian", -1)
+                            } 
+                            className='minusButton'><RemoveIcon /></button>
+                        <TextField
+                            onClick={handleClick}
+                            error={invalidInput["civilian"]}
+                            autoComplete='off'
+                            margin="dense"
+                            id="civilianStructuresPoints"
+                            value={gameScoresInput["civilian"]}
+                            label="Add Civilian Points"
+                            type="number"
+                            variant="standard"
+                            onChange={(e) => setScores(e.target.value, "civilian")}
+                        />
+                        <button 
+                            onClick={
+                                () => adjustInput("civilian", 1)
+                            } 
+                            className='plusButton'><AddIcon /></button>
+                    </div>
+                    {
+                        invalidInput["civilian"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
 
                 <div className='scientificPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("scientificPoints")}>
-                        Add scientific points
-                    </Button>
-                    <Dialog open={openScientificPointsModal} onClose={() => handleCloseModal("scientificPoints")}>
-                        <DialogTitle className='dialogHeading'>Scientific Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                To be written...
-                            </DialogContentText>
+                    <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                        <button 
+                            onClick={
+                                () => adjustInput("scientific", -1)
+                            } 
+                            className='minusButton'><RemoveIcon /></button>
                             <TextField
-                                autoFocus
+                                onClick={handleClick}
                                 error={invalidInput["scientific"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
+                                value={gameScoresInput["scientific"]}
                                 autoComplete='off'
                                 margin="dense"
                                 id="scientificPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
+                                label="Add Scientific Points"
+                                type="number"
                                 variant="standard"
                                 onChange={(e) => setScores(e.target.value, "scientific")}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("scientificPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["scientific"] === false) addGameScore("scientificPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["scientific"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                                />
+                            <button 
+                                onClick={
+                                    () => adjustInput("scientific", 1)
+                                } 
+                                className='plusButton'><AddIcon /></button>
+                    </div>
+                    {
+                        invalidInput["scientific"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
 
                 <div className='commercialPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("commercialPoints")}>
-                        Add commercial points
-                    </Button>
-                    <Dialog open={openCommercialPointsModal} onClose={() => handleCloseModal("commercialPoints")}>
-                        <DialogTitle className='dialogHeading'>Commercial Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                To be written...
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                error={invalidInput["commercial"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
-                                autoComplete='off'
-                                margin="dense"
-                                id="commercialPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setScores(e.target.value, "commercial")}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("commercialPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["commercial"] === false) addGameScore("commercialPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["commercial"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                    <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                        <button 
+                            onClick={
+                                () => adjustInput("commercial", -1)
+                            } 
+                            className='minusButton'><RemoveIcon /></button>
+                        <TextField
+                            onClick={handleClick}
+                            error={invalidInput["commercial"]}
+                            value={gameScoresInput["commercial"]}
+                            autoComplete='off'
+                            margin="dense"
+                            id="commercialPoints"
+                            label="Add Commercial Points"
+                            type="number"
+                            variant="standard"
+                            onChange={(e) => setScores(e.target.value, "commercial")}
+                        />
+                        <button 
+                            onClick={
+                                () => adjustInput("commercial", 1)
+                            } 
+                            className='plusButton'><AddIcon /></button>
+                    </div>
+                    {
+                        invalidInput["commercial"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
 
                 <div className='guildPointsContainer'>
-                    <Button variant="contained" onClick={() => handleClickOpenModal("guildPoints")}>
-                        Add guild points
-                    </Button>
-                    <Dialog open={openGuildPointsModal} onClose={() => handleCloseModal("guildPoints")}>
-                        <DialogTitle className='dialogHeading'>Guild Points</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                To be written...
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                error={invalidInput["guild"]}
-                                helperText="Format: Only numeric values 0-9 and at least one character"
-                                autoComplete='off'
-                                margin="dense"
-                                id="guildPoints"
-                                label="Points"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setScores(e.target.value, "guild")}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => handleCloseModal("guildPoints")}>Cancel</Button>
-                            <Button onClick={() => { if(invalidInput["guild"] === false) addGameScore("guildPoints")}}>Add points</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Checkbox
-                        checked={isInputEntered["guild"]}
-                        color="success"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                    <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "0.5em", maxWidth: "15em"}}>
+                        <button 
+                            onClick={
+                                () => adjustInput("guild", -1)
+                            } 
+                            className='minusButton'><RemoveIcon /></button>
+                        <TextField
+                            onClick={handleClick}
+                            error={invalidInput["guild"]}
+                            value={gameScoresInput["guild"]}
+                            autoComplete='off'
+                            margin="dense"
+                            id="guildPoints"
+                            label="Add Guild Points"
+                            type="number"
+                            variant="standard"
+                            onChange={(e) => setScores(e.target.value, "guild")}
+                        />
+                        <button
+                            onClick={
+                                () => adjustInput("guild", 1)
+                            } 
+                            className='plusButton'><AddIcon /></button>
+                    </div>
+                    {
+                        invalidInput["guild"] === true ?
+                            <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
+                        : <></>
+                    }
                 </div>
 
             </div>
+
             <Button sx={{ marginRight: "0.5em" }} variant="outlined" size="large" color="success" onClick={quitGame}
             >Quit Game</Button>
            <Button sx={{ marginRight: "2em" }} variant="contained" size="large" color="success" onClick={ (e) => {

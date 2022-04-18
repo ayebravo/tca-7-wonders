@@ -159,6 +159,8 @@ const App: React.FC = () => {
     setCheckedPlayersList([...checkedPlayersList, newPlayer.uniqueID]); // New added players are checked by default
   };
 
+  // TODO: Add previous players to local storage
+
   return (
     <div className="App">
       <Routes>
