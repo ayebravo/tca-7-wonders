@@ -4,6 +4,10 @@
 	padding-top: 1em;
 }
 
+.setupGameContainer {
+	padding-bottom: 2em;
+}
+
 .setupGameContainer .MuiListItemText-primary {
 	font-size: 0.9em !important;
 }

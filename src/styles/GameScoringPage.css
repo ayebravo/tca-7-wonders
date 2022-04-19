@@ -6,7 +6,8 @@
 }
 
 .endOfGameContainer {
-	overflow-y: scroll;
+	/* overflow-y: scroll; */
+	padding-bottom: 2em;
 }
 
 .endOfGameScoringSection {
