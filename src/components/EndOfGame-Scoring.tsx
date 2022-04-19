@@ -99,6 +99,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         setRunningTotalPoints(runningTotalPoints);
     }, [gameScoresInput]);
 
+    // Validates user input and set game scores
     const setScores = (inputValue: string, scoreType: string) => {
         const regexExpression = new RegExp("^[0-9]+$");
 
@@ -239,8 +240,6 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
     }, [displayAlertMessage, allScoresEntered])
 
     // TODO: Add more info or help at the top (or a ? icon) with instructions (as dialog or new screen)
-    // TODO: Fix that when I am focusing on an input field and I scroll, it changes the value set for the input and 'activates' the error message
-            // I tried onWheel={event => { event.preventDefault(); }} and onMouseDown={(e) => e.preventDefault()}
 
     return (
         <div className="endOfGameContainer"> 
@@ -268,6 +267,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             id="militaryPoints"
                             label="Add Military Points"
                             value={gameScoresInput["military"]}
+                            InputProps={{
+                                inputProps: { 
+                                    min: 0 
+                                }
+                            }}
                             type="number"
                             fullWidth
                             variant="standard"
@@ -279,8 +283,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             } 
                             className='plusButton'><AddIcon /></button>
                     </div>
-                    
-                    {
+                    {   
                         invalidInput["military"] === true ?
                             <small style={{maxWidth: "80%", paddingLeft: "2em", color: "#d32f2f"}}>Format: Only numeric values 0-9 and at least one character</small>
                         : <></>
@@ -300,6 +303,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             autoComplete='off'
                             margin="dense"
                             value={gameScoresInput["treasury"]}
+                            InputProps={{
+                                inputProps: { 
+                                    min: 0 
+                                }
+                            }}
                             id="treasuryPoints"
                             label="Add Treasury Points"
                             type="number"
@@ -330,6 +338,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             onClick={handleClick}
                             error={invalidInput["wonder"]}
                             value={gameScoresInput["wonder"]}
+                            InputProps={{
+                                inputProps: { 
+                                    min: 0 
+                                }
+                            }}
                             autoComplete='off'
                             margin="dense"
                             id="wonderPoints"
@@ -365,6 +378,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             margin="dense"
                             id="civilianStructuresPoints"
                             value={gameScoresInput["civilian"]}
+                            InputProps={{
+                                inputProps: { 
+                                    min: 0 
+                                }
+                            }}
                             label="Add Civilian Points"
                             type="number"
                             variant="standard"
@@ -394,6 +412,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                                 onClick={handleClick}
                                 error={invalidInput["scientific"]}
                                 value={gameScoresInput["scientific"]}
+                                InputProps={{
+                                    inputProps: { 
+                                        min: 0 
+                                    }
+                                }}
                                 autoComplete='off'
                                 margin="dense"
                                 id="scientificPoints"
@@ -426,6 +449,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             onClick={handleClick}
                             error={invalidInput["commercial"]}
                             value={gameScoresInput["commercial"]}
+                            InputProps={{
+                                inputProps: { 
+                                    min: 0 
+                                }
+                            }}
                             autoComplete='off'
                             margin="dense"
                             id="commercialPoints"
@@ -458,6 +486,11 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
                             onClick={handleClick}
                             error={invalidInput["guild"]}
                             value={gameScoresInput["guild"]}
+                            InputProps={{
+                                inputProps: { 
+                                    min: 0 
+                                }
+                            }}
                             autoComplete='off'
                             margin="dense"
                             id="guildPoints"
