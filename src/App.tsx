@@ -96,9 +96,22 @@ const App: React.FC = () => {
     }
   };
 
+  const loadPreviousPlayers = async () => {
+    try {
+      const playersList = await localforage.getItem<player[]>("previousPlayers");
+      setPlayersList(playersList ?? players);
+    }
+
+    catch(err) {
+      console.error(err);
+      setPlayersList(players);
+    }
+  };
+
   useEffect(
     () => {
       loadGameResults();
+      loadPreviousPlayers();
     }, []
   );
 
@@ -108,9 +121,9 @@ const App: React.FC = () => {
     wonder: ""
   });
   const [results, setResults] = useState<gameResult[]>([]);
-  const [playersList, setPlayersList] = useState(players);
-  const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0].uniqueID]);
-  const [wonderValue, setWonderValue] = useState(wonders[0].uniqueID);
+  const [playersList, setPlayersList] = useState<player[]>(players);
+  const [checkedPlayersList, setCheckedPlayersList] = useState([playersList[0]?.uniqueID] ?? "");
+  const [wonderValue, setWonderValue] = useState(wonders[0]?.uniqueID ?? "");
   const [gameScores, setGameScores] = useState<number[]>([]);
   const [gamesStats, setGamesStats] = useState<stats>({
     wins: 0,
@@ -146,20 +159,22 @@ const App: React.FC = () => {
     setResults(savedResults);
 
     setGameScores([]); // Resetting gameScores before starting a new game
-    setCheckedPlayersList([playersList[0].uniqueID]); // Resetting the checked players for a new game
     setWonderValue(wonders[0].uniqueID); // Resetting the wonder value, so the first one appears checked by default on a new game
+    setCheckedPlayersList([playersList[0]?.uniqueID]); // Resetting the checked players for a new game
   };
 
-  const addPlayer = (newPlayer: player) => {
-    setPlayersList([
-      ...playersList,
-      newPlayer
-    ]);
+  const addPlayer = async (newPlayer: player) => {
+    
+    const updatedPlayers = [
+      ...playersList 
+      , newPlayer
+    ];
 
-    setCheckedPlayersList([...checkedPlayersList, newPlayer.uniqueID]); // New added players are checked by default
+    const savedPlayers = await localforage.setItem('previousPlayers', updatedPlayers);
+
+    setPlayersList(savedPlayers);
+    setCheckedPlayersList([...checkedPlayersList, newPlayer?.uniqueID]); // New added players are checked by default
   };
-
-  // TODO: Add previous players to local storage
 
   return (
     <div className="App">
