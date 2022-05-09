@@ -46,7 +46,14 @@ export interface stats {
   lastGameTotalScore: number,
   lastGameWonder: string,
   lastGameDuration: number,
-  avgGameLength: number
+  avgGameLength: number,
+  mostMilitaryPoints: number,
+  mostTreasuryPoints: number,
+  mostWonderPoints: number,
+  mostCivilianPoints: number,
+  mostScientificPoints: number,
+  mostCommercialPoints: number,
+  mostGuildPoints: number
 }
 
 export interface currentGame {
@@ -138,7 +145,14 @@ const App: React.FC = () => {
     lastGameTotalScore: 0,
     lastGameDuration: 0,
     avgGameLength: 0,
-    lastGameWonder: "N/A"
+    lastGameWonder: "N/A",
+    mostMilitaryPoints: 0,
+    mostTreasuryPoints: 0,
+    mostWonderPoints: 0,
+    mostCivilianPoints: 0,
+    mostScientificPoints: 0,
+    mostCommercialPoints: 0,
+    mostGuildPoints: 0
   });
 
   const getGameDuration = (game: gameResult) => {

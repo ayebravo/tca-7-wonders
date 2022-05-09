@@ -99,7 +99,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             <h2>Cool Games Stats</h2>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Longest game (minutes)
+                    Longest game
                 </Typography>
                 <Typography variant="body1" component="div">
                     {gamesStats.longestGameDuration}
@@ -107,7 +107,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Shortest game (minutes)
+                    Shortest game
                 </Typography>
                 <Typography variant="body1" component="div">
                     {gamesStats.shortestGameDuration}
@@ -115,7 +115,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Avg. Game Duration (minutes)
+                    Avg. Game Duration
                 </Typography>
                 <Typography variant="body1" component="div">
                     {gamesStats.avgGameLength}
@@ -124,18 +124,10 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             <h3 style={{textAlign: "left", paddingLeft: "0.7em", color: "#c86d0f"}}>Most Points in a Game</h3>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Victory Points
-                </Typography>
-                <Typography variant="body1" component="div">
-                    #
-                </Typography>
-            </CardContent>
-            <CardContent className='cardContent'>
-                <Typography variant="body1" component="div">
                     Military Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostMilitaryPoints}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -143,7 +135,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Treasury Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostTreasuryPoints}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -151,7 +143,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Wonder Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostWonderPoints}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -159,7 +151,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Civilian Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostCivilianPoints}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -167,7 +159,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Scientific Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostScientificPoints}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -175,7 +167,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Commercial Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostCommercialPoints}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -183,7 +175,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Guild Points
                 </Typography>
                 <Typography variant="body1" component="div">
-                    #
+                    {gamesStats.mostGuildPoints}
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -233,6 +225,62 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
         ) / gamesDuration.length
     };
 
+    const getMostMilitaryPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most military points in a game
+            .map(r => r.points.military)
+        )
+    );
+
+    const getMostTreasuryPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most treasury points in a game
+            .map(r => r.points.treasury)
+        )
+    );
+
+    const getMostWonderPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most wonder points in a game
+            .map(r => r.points.wonder)
+        )
+    );
+
+    const getMostCivilianPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most civilian points in a game
+            .map(r => r.points.civilian)
+        )
+    );
+
+    const getMostScientificPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most scientific points in a game
+            .map(r => r.points.scientific)
+        )
+    );
+
+    const getMostCommercialPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most commercial points in a game
+            .map(r => r.points.commercial)
+        )
+    );
+
+    const getMostGuildPoints = () => (
+        Math.max(
+            ...gameResults
+            .filter(r => r.gameResult !== "Q") // Don't count quits in most guild points in a game
+            .map(r => r.points.guild)
+        )
+    );
+
     const getStats = () => {
         const gameResultWLCheck = Object.entries(gameResults).filter((key, value) => key[1].gameResult === "W" || key[1].gameResult === "L");
         const gameResultQCheck = Object.entries(gameResults).filter((key, value) => key[1].gameResult === "Q");
@@ -249,6 +297,13 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             const lastGameDuration = prettyMilliseconds(gameResults[gameResults.length - 1].duration);
             const lastGameWonder = gameResults[gameResults.length - 1].wonder;;
             const avgGameLength = prettyMilliseconds(getAverageGameLength());
+            const mostMilitaryPoints = getMostMilitaryPoints();
+            const mostTreasuryPoints = getMostTreasuryPoints();
+            const mostWonderPoints = getMostWonderPoints();
+            const mostCivilianPoints = getMostCivilianPoints();
+            const mostScientificPoints = getMostScientificPoints();
+            const mostCommercialPoints = getMostCommercialPoints();
+            const mostGuildPoints = getMostGuildPoints();
 
             setGamesStats({
                 ...gamesStats, 
@@ -262,7 +317,14 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                 lastGameTotalScore: lastGameTotalScore,
                 lastGameDuration: lastGameDuration,
                 avgGameLength: avgGameLength,
-                lastGameWonder: lastGameWonder
+                lastGameWonder: lastGameWonder,
+                mostMilitaryPoints: mostMilitaryPoints,
+                mostTreasuryPoints: mostTreasuryPoints,
+                mostWonderPoints: mostWonderPoints,
+                mostCivilianPoints: mostCivilianPoints,
+                mostScientificPoints: mostScientificPoints,
+                mostCommercialPoints: mostCommercialPoints,
+                mostGuildPoints: mostGuildPoints
             });
         } else if (gameResults.length > 0 && gameResultQCheck.length > 0) {
             const quitGamesTotal = gameResults.filter(game => game.gameResult === "Q").length;
