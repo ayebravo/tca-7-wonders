@@ -35,7 +35,7 @@ const BasicPopover = () => {
         }}
       >
         <Typography style={{ padding: "0.5em" }} variant='body2'>{pointsInformationIconTooltip}
-            <a href='https://www.ultraboardgames.com/7wonders/scoring.php' target="_blank">Scoring Points in 7 Wonders</a>
+            <a href='https://www.ultraboardgames.com/7wonders/scoring.php' target="_blank" rel="noreferrer">Scoring Points in 7 Wonders</a>
         </Typography>
       </Popover>
     </div>
