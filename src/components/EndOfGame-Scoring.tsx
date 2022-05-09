@@ -9,6 +9,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Typography from '@mui/material/Typography';
 import { currentGame, gameResult } from '../App';
 import '../styles/GameScoringPage.css';
+import BasicPopover from './Popover';
 
 type A = keyof gameScoresInput;
 type gameScoresInput = {
@@ -240,13 +241,14 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displayAlertMessage, allScoresEntered])
 
-    // TODO: Add more info or help at the top (or a ? icon) with instructions (as dialog or new screen)
-
     return (
         <div className="endOfGameContainer"> 
            <Button onClick={() => nav("/")}><img src={Logo} className="Small-logo" alt="logo" /></Button>
            <h1 style={{textAlign: "left", marginBottom: 0}}>Game Points</h1>
-           <p>Add the points at the end of Stage 3.</p>
+           <p>
+               Add the points at the end of Stage 3
+                   <BasicPopover />
+            </p>
            
            <div className='endOfGameScoringSection'>
                 <Typography style={{paddingBottom: "1em", fontWeight: 600}} variant="button" display="block" gutterBottom>
