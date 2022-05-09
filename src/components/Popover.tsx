@@ -17,7 +17,7 @@ const BasicPopover = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-  const pointsInformationIconTooltip = "For more information on how score points, please visit ";
+  const pointsInformationIconTooltip = "For more information on how to score points, please visit ";
 
   return (
     <div>
