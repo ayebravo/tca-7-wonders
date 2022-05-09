@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import '../styles/Fun-facts.css';
 import { gameResult, stats } from '../App';
+import prettyMilliseconds from 'pretty-ms';
 
 interface FunFactsProps {
     gamesStats: stats,
@@ -84,10 +85,10 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             </CardContent>
             <CardContent className='cardContent'>
                 <Typography variant="body1" component="div">
-                    Duration (minutes)
+                    Duration
                 </Typography>
                 <Typography variant="body1" component="div">
-                    {gamesStats.lastGameDuration.toFixed(2)}
+                    {gamesStats.lastGameDuration}
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -101,7 +102,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Longest game (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    {gamesStats.longestGameDuration.toFixed(2)}
+                    {gamesStats.longestGameDuration}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -109,7 +110,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Shortest game (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    {gamesStats.shortestGameDuration.toFixed(2)}
+                    {gamesStats.shortestGameDuration}
                 </Typography>
             </CardContent>
             <CardContent className='cardContent'>
@@ -117,7 +118,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
                     Avg. Game Duration (minutes)
                 </Typography>
                 <Typography variant="body1" component="div">
-                    {gamesStats.avgGameLength.toFixed(2)}
+                    {gamesStats.avgGameLength}
                 </Typography>
             </CardContent>
             <h3 style={{textAlign: "left", paddingLeft: "0.7em", color: "#c86d0f"}}>Most Points in a Game</h3>
@@ -242,12 +243,12 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
             const quitGamesTotal = gameResults.filter(game => game.gameResult === "Q").length;
             const winsPercentage = calculateWinsPercentage();
             const losesPercentage = calculateLosesPercentage();
-            const longestGameDuration = getLongestGameDuration();
-            const shortestGameDuration = getShortestGameDuration();
+            const longestGameDuration = prettyMilliseconds(getLongestGameDuration());
+            const shortestGameDuration = prettyMilliseconds(getShortestGameDuration());
             const lastGameTotalScore = gameResults[gameResults.length - 1].totalScore;
-            const lastGameDuration = gameResults[gameResults.length - 1].duration;
+            const lastGameDuration = prettyMilliseconds(gameResults[gameResults.length - 1].duration);
             const lastGameWonder = gameResults[gameResults.length - 1].wonder;;
-            const avgGameLength = getAverageGameLength();
+            const avgGameLength = prettyMilliseconds(getAverageGameLength());
 
             setGamesStats({
                 ...gamesStats, 

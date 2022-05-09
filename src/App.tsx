@@ -8,6 +8,8 @@ import EndOfGameScoring from "./components/EndOfGame-Scoring";
 import GameResult from './components/GameResult';
 import './App.css';
 
+const prettyMilliseconds = require('pretty-ms');
+
 
 export interface player {
   name: string;
@@ -143,7 +145,7 @@ const App: React.FC = () => {
     const gameStartTime = Date.parse(game.start);
     const gameEndTime = Date.parse(game.end);
     const gameDuration = gameEndTime - gameStartTime;
-    return (gameDuration / 1000 / 60); // Game duration in minutes
+    return gameDuration;
   };
  
   const addGameResult = async (singleGameResult: gameResult) => {

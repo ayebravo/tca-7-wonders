@@ -63,8 +63,6 @@ const SetupGame: React.FC<SetupGameProps> = ({ players, addPlayer, setCurrentGam
     }
 
     const startGame = () => {
-        // TODO: Delete if not used => Might use to then use date-fns package to format date => const startGameTimestamp = Date.now();
-        
         // Setup current game's start time and players
         const checkedPlayers = players.filter(player => checkedPlayersList.includes(player.uniqueID));
         const checkedWonder = wonders.filter(wonder => wonder.uniqueID === wonderValue);
