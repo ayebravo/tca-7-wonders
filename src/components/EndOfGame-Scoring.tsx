@@ -237,6 +237,7 @@ const EndOfGameScoring: React.FC<NewGameProps> = ({ currentGame, gameScores, set
         if (displayAlertMessage === false && allScoresEntered === true) {
             nav("/game-result");
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displayAlertMessage, allScoresEntered])
 
     // TODO: Add more info or help at the top (or a ? icon) with instructions (as dialog or new screen)

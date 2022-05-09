@@ -274,6 +274,7 @@ const FunFacts: React.FC<FunFactsProps> = ({ gamesStats, setGamesStats, gameResu
 
     useEffect(() => {
         getStats();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

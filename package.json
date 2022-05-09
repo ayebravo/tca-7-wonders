@@ -2,7 +2,7 @@
 	"name": "tca-7-wonders",
 	"version": "0.1.0",
 	"private": true,
-	"homepage": "https://2022-spring-adv-fe-mon.github.io/tca-7-wonders",
+	"homepage": "https://ayebravo.github.io/tca-7-wonders",
 	"dependencies": {
 		"@emotion/react": "^11.8.1",
 		"@emotion/styled": "^11.8.1",

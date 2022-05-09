@@ -30,6 +30,7 @@ const GameResult: React.FC<GameResultProps> = ({ gameResults, addGameResult, gam
         if (gameResultSelection !== "") {
             endGame();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameResultSelection]);
 
     const addWonGame = () => {
